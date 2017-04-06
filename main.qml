@@ -39,8 +39,8 @@ ApplicationWindow {
             Layout.leftMargin: 30
             Layout.rightMargin: 30
             Layout.topMargin: 20
-            Layout.minimumHeight: 100
-            Layout.minimumWidth: 100
+            Layout.preferredHeight: 100
+            Layout.fillWidth: true
 
             ListView{
                 id: listFiles
@@ -73,6 +73,7 @@ ApplicationWindow {
         Rectangle{
             width: 100
             Layout.fillHeight: true
+            Layout.fillWidth: true
             color: "red"
         }
     }
