@@ -8,27 +8,24 @@ ApplicationWindow {
     height: 480
     title: qsTr("检测占用，解除占用")
 
-
-
-        ListModel{
-            id: fileModel
-            ListElement{
-                fileUrl: "C:\\text.txt"
-            }
+    ListModel{
+        id: fileModel
+        ListElement{
+            fileUrl: "C:\\text.txt"
         }
+    }
+
+    ListModel{
+        id: progressModel
+    }
 
     ColumnLayout{
         id: mainLayout
         anchors.fill: parent
         spacing: 4
 
-//        Rectangle{
-//            anchors.fill: parent
-//            color: "green"
-//        }
-
         Label{
-            text: qsTr("检测文件")
+            text: qsTr("文件")
 
             Layout.alignment: Qt.AlignTop
             Layout.topMargin: 20
@@ -38,21 +35,25 @@ ApplicationWindow {
         Rectangle{
             Layout.leftMargin: 30
             Layout.rightMargin: 30
-            Layout.topMargin: 20
+            Layout.topMargin: 10
             Layout.preferredHeight: 100
             Layout.fillWidth: true
+            Layout.fillHeight: true
 
             ListView{
                 id: listFiles
 
+                anchors.margins: 2
                 anchors.fill: parent
                 model: fileModel
                 delegate: Rectangle {
                     height: 25
-                    width: 100
+//                    width: 100
                     Text { text: fileUrl }
                 }
             }
+
+            border.color: "black"
 
             DropArea{
                 anchors.fill: parent
@@ -67,15 +68,67 @@ ApplicationWindow {
                 }
             }
 
-            color: "blue"
+//            color: "blue"
+        }
+
+        Label{
+            text: qsTr("占用的程序")
+
+            Layout.topMargin: 20
+            Layout.leftMargin: 30
         }
 
         Rectangle{
-            width: 100
-            Layout.fillHeight: true
+            Layout.leftMargin: 30
+            Layout.rightMargin: 30
+            Layout.topMargin: 10
+            Layout.preferredHeight: 100
             Layout.fillWidth: true
-            color: "red"
+            Layout.fillHeight: true
+
+            border.color: "black"
+
+            ListView{
+                id: listOccupy
+
+                anchors.margins: 2
+                anchors.fill: parent
+                model: progressModel
+                delegate: Rectangle {
+                    height: 25
+//                    width: 100
+                    Text { text: progressInfo }
+                }
+            }
+
+//            color: "red"
         }
+
+        RowLayout{
+
+            Layout.bottomMargin: 5
+            Layout.leftMargin: 30
+            Layout.rightMargin: 30
+
+            Rectangle{
+                Layout.fillWidth: true
+            }
+
+            Button{
+                text: "解锁"
+            }
+
+            Button{
+                text: "取消"
+            }
+        }
+
+//        Rectangle{
+//            width: 100
+//            Layout.fillHeight: true
+//            Layout.fillWidth: true
+////            color: "red"
+//        }
     }
 
 //    SwipeView {

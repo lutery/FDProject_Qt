@@ -2,7 +2,8 @@ QT += qml quick
 
 CONFIG += c++11
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    fdobject.cpp
 
 RESOURCES += qml.qrc
 
@@ -27,3 +28,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    fdobject.h \
+    predefine.h
+
+win32: LIBS += -L$$PWD/Lib/x64/ -lPsapi
