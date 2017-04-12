@@ -211,18 +211,21 @@ void FDObject::analysis(QString filePathName)
 
     if (filePathName.length() <= 0)
     {
+        emit this->analysisComplete(false, mHandles);
         return;
     }
 
     ncScopedHandle hTempFile = CreateFile(_T("NUL"), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
     if (hTempFile == NULL)
     {
+        emit this->analysisComplete(false, mHandles);
         return;
     }
 
     PSYSTEM_HANDLE_INFORMATION pshi = FDObjectHelper::GetSystemHandleInfo();
     if (pshi == NULL)
     {
+        emit this->analysisComplete(false, mHandles);
         return;
     }
 
@@ -275,5 +278,6 @@ void FDObject::analysis(QString filePathName)
     free(pshi);
 
     mbAnalyse = true;
+    emit this->analysisComplete(true, mHandles);
     return;
 }

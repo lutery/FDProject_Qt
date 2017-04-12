@@ -15,7 +15,7 @@ public:
     ~FDObject();
 
 signals:
-    void analysisComplete(QVector<ncFileHandle>);
+    void analysisComplete(bool isReady, QVector<ncFileHandle>);
 
 public slots:
 
