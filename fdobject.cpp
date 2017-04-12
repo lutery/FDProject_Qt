@@ -1,10 +1,10 @@
 #include "fdobject.h"
-#include "predefine.h"
 #include <QThread>
-#include <QHash>
-#include <QHashIterator>
+//#include <QHash>
+//#include <QHashIterator>
+#include <unordered_map>
 
-class CheckBlockObject : QObject
+class CheckBlockObject : public QObject
 {
     Q_OBJECT
 public:
@@ -23,7 +23,7 @@ public slots:
         {
             BYTE buf[1024];
             IO_STATUS_BLOCK ioStatus;
-            fpNtQueryInformationFile(mCheckHandle, mCheckHandle, buf, 1024, FileNameInformation);
+            fpNtQueryInformationFile(mCheckHandle, &ioStatus, buf, 1024, FileNameInformation);
         }
     }
 
@@ -91,7 +91,7 @@ public:
         return TRUE;
     }
 
-    static void GetDeviceDriveMap(QHash<tstring, tstring>& mapDeviceDrive)
+    static void GetDeviceDriveMap(std::unordered_map<tstring, tstring>& mapDeviceDrive)
     {
         TCHAR szDrives[512];
         if (!GetLogicalDriveStrings(_countof(szDrives) - 1, szDrives))
@@ -116,22 +116,32 @@ public:
 
     static BOOL DevicePathToDrivePath(tstring& path)
     {
-        static QHash<tstring, tstring> mapDeviceDrive;
+        static std::unordered_map<tstring, tstring> mapDeviceDrive;
 
         if (mapDeviceDrive.empty())
         {
             FDObjectHelper::GetDeviceDriveMap(mapDeviceDrive);
         }
 
-        QHashIterator<tstring, tstring> hashIter(mapDeviceDrive);
-        while (hashIter.hasNext())
-        {
-            hashIter.next();
+//        QHashIterator<tstring, tstring> hashIter(mapDeviceDrive);
+//        while (hashIter.hasNext())
+//        {
+//            hashIter.next();
 
-            size_t nLength = hashIter.key().length();
-            if (_tcsnicmp(hashIter.key().c_str(), path.c_str(), nLength) == 0)
+//            size_t nLength = hashIter.key().length();
+//            if (_tcsnicmp(hashIter.key().c_str(), path.c_str(), nLength) == 0)
+//            {
+//                path.replace(0, nLength, hashIter.value());
+//                return TRUE;
+//            }
+//        }
+
+        for (std::unordered_multimap<tstring, tstring>::iterator iter = mapDeviceDrive.begin(); iter != mapDeviceDrive.end(); ++iter)
+        {
+            size_t nLength = iter->first.length();
+            if (_tcsnicmp(iter->first.c_str(), path.c_str(), nLength) == 0)
             {
-                path.replace(0, nLength, hashIter.value());
+                path.replace(0, nLength, iter->second);
                 return TRUE;
             }
         }
@@ -184,7 +194,7 @@ public:
 
 FDObject::FDObject(QObject *parent) : QObject(parent)
 {
-
+    mbAnalyse = false;
 }
 
 FDObject::~FDObject()
@@ -195,6 +205,7 @@ FDObject::~FDObject()
 void FDObject::analysis(QString filePathName)
 {
     mHandles.clear();
+    mbAnalyse = false;
 
     if (filePathName.length() <= 0)
     {
@@ -204,13 +215,13 @@ void FDObject::analysis(QString filePathName)
     ncScopedHandle hTempFile = CreateFile(_T("NUL"), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
     if (hTempFile == NULL)
     {
-        return FALSE;
+        return;
     }
 
     PSYSTEM_HANDLE_INFORMATION pshi = FDObjectHelper::GetSystemHandleInfo();
     if (pshi == NULL)
     {
-        return FALSE;
+        return;
     }
 
     BYTE nFileType = 0;
@@ -246,7 +257,7 @@ void FDObject::analysis(QString filePathName)
         }
 
         tstring filePath;
-        if (FDObjectHelper::GetHandlePath(handle, filePath) && filePath.find(filePathName.c_str()) != tstring::npos)
+        if (FDObjectHelper::GetHandlePath(handle, filePath) && filePath.find(filePathName.toStdWString()) != tstring::npos)
         {
             ncScopedHandle hProcess = OpenProcess(MAXIMUM_ALLOWED, FALSE, pshi->Handles[i].dwProcessId);
 
@@ -261,5 +272,6 @@ void FDObject::analysis(QString filePathName)
 
     free(pshi);
 
-    return TRUE;
+    mbAnalyse = true;
+    return;
 }

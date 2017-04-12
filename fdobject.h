@@ -5,8 +5,9 @@
 #include <QString>
 #include <QVector>
 #include <memory>
+#include "predefine.h"
 
-struct ncFileHandle;
+//struct ncFileHandle;
 
 class FDObject : public QObject
 {
@@ -21,6 +22,7 @@ signals:
 public slots:
 
 private:
+    bool mbAnalyse;
     QVector<std::shared_ptr<ncFileHandle>> mHandles;
 
 public:
