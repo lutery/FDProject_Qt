@@ -3,7 +3,8 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    fdobject.cpp
+    fdobject.cpp \
+    checkblockobject.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,6 +33,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     fdobject.h \
-    predefine.h
+    predefine.h \
+    checkblockobject.h
 
 win32: LIBS += -L$$PWD/Lib/x64/ -lPsapi

@@ -7,8 +7,6 @@
 #include <memory>
 #include "predefine.h"
 
-//struct ncFileHandle;
-
 class FDObject : public QObject
 {
     Q_OBJECT

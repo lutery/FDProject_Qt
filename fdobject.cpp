@@ -1,38 +1,40 @@
 #include "fdobject.h"
+#include "checkblockobject.h"
 #include <QThread>
-//#include <QHash>
-//#include <QHashIterator>
 #include <unordered_map>
 
-class CheckBlockObject : public QObject
+//class CheckBlockObject : public QObject
+//{
+//    Q_OBJECT
+//public:
+//    explicit CheckBlockObject(HANDLE handle, QObject* parent = 0) : QObject(parent)
+//    {
+//        Q_ASSERT(handle != NULL);
+//        mCheckHandle = handle;
+//    }
+
+//public slots:
+//    void start();
+
+//private:
+//    HANDLE mCheckHandle;
+//};
+
+//void CheckBlockObject::start()
+//{
+//    static NTQUERYINFORMATIONFILE fpNtQueryInformationFile = (NTQUERYINFORMATIONFILE)GetProcAddress(GetModuleHandle(_T("ntdll")), "NtQueryInformationFile");
+
+//    if (fpNtQueryInformationFile != NULL)
+//    {
+//        BYTE buf[1024];
+//        IO_STATUS_BLOCK ioStatus;
+//        fpNtQueryInformationFile(mCheckHandle, &ioStatus, buf, 1024, FileNameInformation);
+//    }
+//}
+
+class FDObjectHelper : public QObject
 {
     Q_OBJECT
-public:
-    explicit CheckBlockObject(HANDLE handle, QObject* parent = 0) : QObject(parent)
-    {
-        Q_ASSERT(handle != NULL);
-        mCheckHandle = handle;
-    }
-
-public slots:
-    void start()
-    {
-        static NTQUERYINFORMATIONFILE fpNtQueryInformationFile = (NTQUERYINFORMATIONFILE)GetProcAddress(GetModuleHandle(_T("ntdll")), "NtQueryInformationFile");
-
-        if (fpNtQueryInformationFile != NULL)
-        {
-            BYTE buf[1024];
-            IO_STATUS_BLOCK ioStatus;
-            fpNtQueryInformationFile(mCheckHandle, &ioStatus, buf, 1024, FileNameInformation);
-        }
-    }
-
-private:
-    HANDLE mCheckHandle;
-};
-
-class FDObjectHelper
-{
 public:
     static PSYSTEM_HANDLE_INFORMATION GetSystemHandleInfo()
     {
