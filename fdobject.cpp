@@ -1,5 +1,7 @@
 #include "fdobject.h"
 #include "checkblockobject.h"
+#include <string>
+#include <QDebug>
 #include <QThread>
 #include <unordered_map>
 
@@ -74,23 +76,58 @@ public:
         return pshi;
     }
 
+    //
+    // 检测指定句柄是否可能导致NtQueryObject卡死：
+    //     1.注意必须使用NtQueryInformationFile而不是NtQueryObject进行检测，否则可能导致WinXP系统
+    //       下进程死锁而无法结束。
+    //
+//    static void CheckBlockThreadFunc(void* param)
+//    {
+//        static NTQUERYINFORMATIONFILE fpNtQueryInformationFile =
+//            (NTQUERYINFORMATIONFILE)GetProcAddress(GetModuleHandle(_T("ntdll")), "NtQueryInformationFile");
+
+//        if (fpNtQueryInformationFile != NULL) {
+//            BYTE buf[1024];
+//            IO_STATUS_BLOCK ioStatus;
+//            fpNtQueryInformationFile((HANDLE)param, &ioStatus, buf, 1024, FileNameInformation);
+//        }
+//    }
+
     static BOOL IsBlockingHandle(HANDLE handle)
     {
-        QThread thread;
-        CheckBlockObject cbObject(handle);
-        cbObject.moveToThread(&thread);
-        QObject::connect(&thread, SIGNAL(started()), &cbObject, SLOT(start()));
-        thread.start();
+//        HANDLE hThread = (HANDLE)_beginthread(FDObjectHelper::CheckBlockThreadFunc, 0, (void*)handle);
 
-        if (!thread.wait(100))
+//        if (WaitForSingleObject(hThread, 100) != WAIT_TIMEOUT) {
+//            return FALSE;
+//        }
+
+//        TerminateThread(hThread, 0);
+//        return TRUE;
+
+//        QThread thread;
+//        CheckBlockObject cbObject(handle);
+//        cbObject.moveToThread(&thread);
+//        QObject::connect(&thread, SIGNAL(started()), &cbObject, SLOT(start()));
+        CheckBlockThread* thread = new CheckBlockThread(handle);
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+        thread->start();
+//        QThread::msleep(500);
+
+//        qDebug() << "start wait";
+        if (!thread->wait(1000))
         {
-            return FALSE;
+//            qDebug() << "time out wait";
+//            qDebug() << "        ";
+            return TRUE;
         }
 
-        thread.terminate();
-        thread.wait();
+//        qDebug() << "end wait";
+//        qDebug() << "        ";
 
-        return TRUE;
+        thread->terminate();
+        thread->wait();
+
+        return FALSE;
     }
 
     static void GetDeviceDriveMap(std::unordered_map<tstring, tstring>& mapDeviceDrive)
@@ -271,6 +308,8 @@ void FDObject::analysis(QString filePathName)
             tstring path(szProcName);
             FDObjectHelper::DevicePathToDrivePath(path);
             std::shared_ptr<ncFileHandle> pFh = std::shared_ptr<ncFileHandle>(new ncFileHandle(pshi->Handles[i], filePath, path));
+//            std::wstring wstring = szProcName;
+            qDebug() << "QDebug is " << QString::fromUtf16((const ushort*)path.c_str());
             mHandles.push_back(pFh);
         }
     }

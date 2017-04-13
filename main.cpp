@@ -2,6 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QStringList>
 #include <QQmlContext>
+//#include "fdobject.h"
+#include "testthread.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +15,9 @@ int main(int argc, char *argv[])
 //    dataList.append("Item 1");
 //    dataList.append("Item 3");
 //    dataList.append("Item 4");
+
+    TestThread testThread;
+    testThread.start();
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));

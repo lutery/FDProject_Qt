@@ -4,7 +4,8 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     fdobject.cpp \
-    checkblockobject.cpp
+    checkblockobject.cpp \
+    testthread.cpp
 
 RESOURCES += qml.qrc
 
@@ -34,6 +35,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     fdobject.h \
     predefine.h \
-    checkblockobject.h
+    checkblockobject.h \
+    testthread.h
 
 win32: LIBS += -L$$PWD/Lib/x64/ -lPsapi
