@@ -51,6 +51,10 @@ ApplicationWindow {
 //                    width: 100
                     Text { text: fileUrl }
                 }
+
+                highlight: Rectangle{
+                    color: "lightblue"
+                }
             }
 
             border.color: "black"
@@ -112,6 +116,16 @@ ApplicationWindow {
 
             Rectangle{
                 Layout.fillWidth: true
+            }
+
+            Button{
+                text: "查询"
+                onClicked: {
+                    if (listFiles.currentIndex >= 0){
+                        var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
+                        console.log(fileUrl)
+                    }
+                }
             }
 
             Button{
