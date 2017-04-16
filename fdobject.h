@@ -5,6 +5,7 @@
 #include <QString>
 #include <QVector>
 #include <memory>
+#include <QStringList>
 #include "predefine.h"
 
 class FDObject : public QObject
@@ -16,15 +17,17 @@ public:
 
 signals:
     void analysisComplete(bool isReady, QVector<std::shared_ptr<ncFileHandle>>);
+    void onComplete(bool isReady, QStringList);
 
 public slots:
+    void analysis(QString filePath);
 
 private:
     bool mbAnalyse;
     QVector<std::shared_ptr<ncFileHandle>> mHandles;
 
 public:
-    void analysis(QString filePath);
+
 };
 
 #endif // FDOBJECT_H

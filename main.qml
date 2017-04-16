@@ -1,12 +1,17 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
+import one.chchy.FDObject 1.0
 
 ApplicationWindow {
     visible: true
     width: 640
     height: 480
     title: qsTr("检测占用，解除占用")
+
+    FDObject{
+        id: fdObject
+    }
 
     ListModel{
         id: fileModel
@@ -17,6 +22,33 @@ ApplicationWindow {
 
     ListModel{
         id: progressModel
+    }
+
+    Component{
+        id: idFileUrl
+        Item {
+            id: fileurldelegate
+            width: parent.width
+            height: 30
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked: fileurldelegate.ListView.view.currentIndex = index
+            }
+
+            RowLayout{
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 8
+                Text{
+                    id: id_fileurl
+                    text: fileUrl
+                    color: fileurldelegate.ListView.isCurrentItem ? "red" : "black"
+                    font.pixelSize: fileurldelegate.ListView.isCurrentItem ? 22 : 18
+                    Layout.fillWidth: true
+                }
+            }
+        }
     }
 
     ColumnLayout{
@@ -46,11 +78,13 @@ ApplicationWindow {
                 anchors.margins: 2
                 anchors.fill: parent
                 model: fileModel
-                delegate: Rectangle {
-                    height: 25
-//                    width: 100
-                    Text { text: fileUrl }
-                }
+//                delegate: Rectangle {
+//                    height: 25
+////                    width: 100
+//                    Text { text: fileUrl }
+//                }
+
+                delegate: idFileUrl
 
                 highlight: Rectangle{
                     color: "lightblue"
@@ -124,12 +158,16 @@ ApplicationWindow {
                     if (listFiles.currentIndex >= 0){
                         var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
                         console.log(fileUrl)
+                        fdObject.analysis(fileUrl)
                     }
                 }
             }
 
             Button{
                 text: "解锁"
+                onClicked: {
+                    listFiles.currentIndex = 0
+                }
             }
 
             Button{
