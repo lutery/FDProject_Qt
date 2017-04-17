@@ -5,7 +5,8 @@ CONFIG += c++11
 SOURCES += main.cpp \
     fdobject.cpp \
     checkblockobject.cpp \
-    testthread.cpp
+    testthread.cpp \
+    fdservice.cpp
 
 RESOURCES += qml.qrc
 
@@ -36,6 +37,7 @@ HEADERS += \
     fdobject.h \
     predefine.h \
     checkblockobject.h \
-    testthread.h
+    testthread.h \
+    fdservice.h
 
 win32: LIBS += -L$$PWD/Lib/x64/ -lPsapi

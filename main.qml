@@ -24,32 +24,32 @@ ApplicationWindow {
         id: progressModel
     }
 
-    Component{
-        id: idFileUrl
-        Item {
-            id: fileurldelegate
-            width: parent.width
-            height: 30
+//    Component{
+//        id: idFileUrl
+//        Item {
+//            id: fileurldelegate
+//            width: parent.width
+//            height: 30
 
-            MouseArea{
-                anchors.fill: parent
-                onClicked: fileurldelegate.ListView.view.currentIndex = index
-            }
+//            MouseArea{
+//                anchors.fill: parent
+//                onClicked: fileurldelegate.ListView.view.currentIndex = index
+//            }
 
-            RowLayout{
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 8
-                Text{
-                    id: id_fileurl
-                    text: fileUrl
-                    color: fileurldelegate.ListView.isCurrentItem ? "red" : "black"
-                    font.pixelSize: fileurldelegate.ListView.isCurrentItem ? 22 : 18
-                    Layout.fillWidth: true
-                }
-            }
-        }
-    }
+//            RowLayout{
+//                anchors.left: parent.left
+//                anchors.verticalCenter: parent.verticalCenter
+//                spacing: 8
+//                Text{
+//                    id: id_fileurl
+//                    text: fileUrl
+//                    color: fileurldelegate.ListView.isCurrentItem ? "red" : "black"
+//                    font.pixelSize: fileurldelegate.ListView.isCurrentItem ? 22 : 18
+//                    Layout.fillWidth: true
+//                }
+//            }
+//        }
+//    }
 
     ColumnLayout{
         id: mainLayout
@@ -84,7 +84,7 @@ ApplicationWindow {
 //                    Text { text: fileUrl }
 //                }
 
-                delegate: idFileUrl
+                delegate: FileUrlDelegate{}
 
                 highlight: Rectangle{
                     color: "lightblue"
@@ -96,10 +96,14 @@ ApplicationWindow {
             DropArea{
                 anchors.fill: parent
                 onDropped: {
+//                    console.log("mytext:" + drop.text)
                     if (drop.hasUrls){
                         for (var i = 0; i < drop.urls.length; ++i){
+                            var fileurl = drop.urls[i].substr(8);
+//                            console.log("myText:" + fileurl);
+
                             listFiles.model.append({
-                                                       "fileUrl" : drop.urls[i]
+                                                       "fileUrl" : fileurl
                                                    });
                         }
                     }
