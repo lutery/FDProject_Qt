@@ -4,7 +4,7 @@
 #include <QObject>
 
 class FDObject;
-class QThread;
+class AnalysisThread;
 
 class FDService : public QObject
 {
@@ -17,10 +17,11 @@ signals:
 
 public slots:
     void analysis(QString filePath);
+    void analysisComplete(bool isReady, QStringList filePaths);
 
 private:
     FDObject* mpFDObject;
-    QThread* mpAnalysis;
+    AnalysisThread* mpAnalysis;
 };
 
 #endif // FDSERVICE_H

@@ -3,14 +3,18 @@
 #include <QStringList>
 #include <QQmlContext>
 #include "fdobject.h"
-//#include "testthread.h"
+#include "fdservice.h"
+#include "testthread.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<FDObject>("one.chchy.FDObject", 1, 0, "FDObject");
+//    TestThread testThread;
+//    testThread.start();
+
+    qmlRegisterType<FDService>("one.chchy.FDService", 1, 0, "FDService");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));

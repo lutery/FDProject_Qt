@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QThread>
 #include <unordered_map>
+#include <QStringList>
 
 //class CheckBlockObject : public QObject
 //{
@@ -318,5 +319,16 @@ void FDObject::analysis(QString filePathName)
 
     mbAnalyse = true;
     emit this->analysisComplete(true, mHandles);
+
+    QStringList handlePathList;
+
+    for (std::shared_ptr<ncFileHandle> pFH : mHandles)
+    {
+        handlePathList.append(QString::fromStdWString(pFH->_path.c_str()));
+//        handlePathList.append(pFH->);
+    }
+
+    emit this->onComplete(true, handlePathList);
+
     return;
 }

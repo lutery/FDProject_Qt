@@ -16,8 +16,8 @@ public:
     ~FDObject();
 
 signals:
-    void analysisComplete(bool isReady, QVector<std::shared_ptr<ncFileHandle>>);
-    void onComplete(bool isReady, QStringList);
+    void analysisComplete(bool, QVector<std::shared_ptr<ncFileHandle>>);
+    void onComplete(bool, QStringList);
 
 public slots:
     void analysis(QString filePath);

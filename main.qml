@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
-import one.chchy.FDObject 1.0
+import one.chchy.FDService 1.0
 
 ApplicationWindow {
     visible: true
@@ -9,7 +9,7 @@ ApplicationWindow {
     height: 480
     title: qsTr("检测占用，解除占用")
 
-    FDObject{
+    FDService{
         id: fdObject
     }
 
@@ -17,6 +17,12 @@ ApplicationWindow {
         id: fileModel
         ListElement{
             fileUrl: "C:\\text.txt"
+        }
+        ListElement{
+            fileUrl: "E:\\UBuntu1404.rar"
+        }
+        ListElement{
+            fileUrl: "H:\\CloudMusic\\MONACA - クロイウタ／日本国外向け製品収録版.mp3"
         }
     }
 
