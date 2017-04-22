@@ -332,3 +332,153 @@ void FDObject::analysis(QString filePathName)
 
     return;
 }
+
+void FDObject::unlockHandle(QString filePathName)
+{
+    mHandles.clear();
+    mbAnalyse = false;
+
+    if (filePathName.length() <= 0)
+    {
+        return;
+    }
+
+    ncScopedHandle hTempFile = CreateFile(_T("NUL"), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+    if (hTempFile == NULL)
+    {
+        return;
+    }
+
+    PSYSTEM_HANDLE_INFORMATION pshi = FDObjectHelper::GetSystemHandleInfo();
+    if (pshi == NULL)
+    {
+        return;
+    }
+
+    BYTE nFileType = 0;
+    DWORD dwCrtPid = GetCurrentProcessId();
+
+    for (DWORD i = 0; i < pshi->dwCount; ++i)
+    {
+        if (pshi->Handles[i].dwProcessId == dwCrtPid && hTempFile == (HANDLE)pshi->Handles[i].wValue)
+        {
+            nFileType = pshi->Handles[i].bObjectType;
+            break;
+        }
+    }
+
+    HANDLE hCrtProc = GetCurrentProcess();
+    for (DWORD i = 0; i < pshi->dwCount; ++i)
+    {
+        if (pshi->Handles[i].bObjectType != nFileType)
+        {
+            continue;
+        }
+
+        ncScopedHandle handle = NULL;
+        ncScopedHandle hProc = OpenProcess(PROCESS_DUP_HANDLE, FALSE, pshi->Handles[i].dwProcessId);
+        if (hProc == NULL || !DuplicateHandle(hProc, (HANDLE)pshi->Handles[i].wValue, hCrtProc, &handle, 0, FALSE, DUPLICATE_SAME_ACCESS))
+        {
+            continue;
+        }
+
+        if (FDObjectHelper::IsBlockingHandle(handle))
+        {
+            continue;
+        }
+
+        if (hProc != NULL)
+        {
+            CloseHandle(hProc);
+        }
+
+        tstring filePath;
+        if (FDObjectHelper::GetHandlePath(handle, filePath) && filePath.find(filePathName.toStdWString()) != tstring::npos)
+        {
+//            ncScopedHandle hProcess = OpenProcess(MAXIMUM_ALLOWED, FALSE, pshi->Handles[i].dwProcessId);
+
+//            TCHAR szProcName[MAX_PATH];
+//            GetProcessImageFileName(hProcess, szProcName, MAX_PATH);
+//            tstring path(szProcName);
+//            FDObjectHelper::DevicePathToDrivePath(path);
+//            std::shared_ptr<ncFileHandle> pFh = std::shared_ptr<ncFileHandle>(new ncFileHandle(pshi->Handles[i], filePath, path));
+//            qDebug() << "QDebug is " << QString::fromUtf16((const ushort*)path.c_str());
+//            mHandles.push_back(pFh);
+
+            this->CloseRemoteHandle(pshi->Handles[i].dwProcessId, (HANDLE)pshi->Handles[i].wValue);
+        }
+    }
+
+    free(pshi);
+
+    mbAnalyse = true;
+
+    return;
+}
+
+/**
+ * @brief FDObject::CloseRemoteHandle
+ * @param dwProcessId 占用文件的进程
+ * @param hRemoteHandle 占用文件进程的内部文件 句柄
+ * @return
+ */
+bool FDObject::CloseRemoteHandle(DWORD dwProcessId, HANDLE hRemoteHandle)
+{
+    HANDLE hExecutHandle = NULL;
+    BOOL bFlag = FALSE;
+    HANDLE hProcess = NULL;
+    HMODULE hKernel32Module = NULL;
+
+    hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, dwProcessId);
+
+    if (NULL == hProcess)
+    {
+        bFlag = FALSE;
+        goto ErrorExit;
+    }
+
+    hKernel32Module = LoadLibraryW(L"kernel32.dll");
+
+    if (hKernel32Module == NULL)
+    {
+        goto ErrorExit;
+    }
+
+    hExecutHandle = CreateRemoteThread(hProcess, 0, 0, (DWORD (__stdcall *)(void *))GetProcAddress(hKernel32Module, "CloseHandle"), hRemoteHandle, 0, NULL);
+
+    if (NULL == hExecutHandle)
+    {
+        bFlag = FALSE;
+        goto ErrorExit;
+    }
+
+    if (WaitForSingleObject(hExecutHandle, 2000) == WAIT_OBJECT_0)
+    {
+        bFlag = TRUE;
+        goto ErrorExit;
+    }
+    else
+    {
+        bFlag = FALSE;
+        goto ErrorExit;
+    }
+
+ErrorExit:
+
+    if (hExecutHandle != NULL)
+    {
+        CloseHandle(hExecutHandle);
+    }
+
+    if (hProcess != NULL)
+    {
+        CloseHandle(hProcess);
+    }
+
+    if (hKernel32Module != NULL)
+    {
+        FreeLibrary(hKernel32Module);
+    }
+
+    return bFlag;
+}

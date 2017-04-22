@@ -11,6 +11,14 @@ ApplicationWindow {
 
     FDService{
         id: fdObject
+        onComplete: {
+            for (var index in filePaths){
+                console.log(filePaths[index]);
+                progressModel.append({
+                                      "progressInfo" : filePaths[index]
+                                     })
+            }
+        }
     }
 
     ListModel{
@@ -105,7 +113,8 @@ ApplicationWindow {
 //                    console.log("mytext:" + drop.text)
                     if (drop.hasUrls){
                         for (var i = 0; i < drop.urls.length; ++i){
-                            var fileurl = drop.urls[i].substr(8);
+//                            var regexp = new RegExp("/", "g");
+                            var fileurl = drop.urls[i].substr(8).replace(/\//g, "\\");
 //                            console.log("myText:" + fileurl);
 
                             listFiles.model.append({
@@ -176,7 +185,11 @@ ApplicationWindow {
             Button{
                 text: "解锁"
                 onClicked: {
-                    listFiles.currentIndex = 0
+                    if (listFiles.currentIndex >= 0){
+                        var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
+                        console.log(fileUrl)
+                        fdObject.unlockHandle(fileUrl)
+                    }
                 }
             }
 

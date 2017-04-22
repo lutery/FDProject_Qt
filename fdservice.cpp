@@ -1,5 +1,6 @@
 #include "fdservice.h"
 #include "analysisthread.h"
+#include "unlockthread.h"
 #include <fdobject.h>
 #include <QDebug>
 
@@ -8,6 +9,7 @@ FDService::FDService(QObject *parent) : QObject(parent)
     this->mpFDObject = nullptr;
     this->mpFDObject = new FDObject();
     this->mpAnalysis = nullptr;
+    this->mpUnlock = nullptr;
 }
 
 FDService::~FDService()
@@ -40,6 +42,17 @@ void FDService::analysis(QString filePath)
    this->mpAnalysis->start();
 }
 
+void FDService::unlockHandle(QString filePath)
+{
+    if (this->mpUnlock != nullptr)
+    {
+        return;
+    }
+
+    this->mpUnlock = new UnlockThread(filePath);
+    this->mpUnlock->start();
+}
+
 void FDService::analysisComplete(bool isReady, QStringList filePaths)
 {
     qDebug() << "isReady:" << (isReady ? "true" : "false");
@@ -48,4 +61,6 @@ void FDService::analysisComplete(bool isReady, QStringList filePaths)
     {
         qDebug() << "filePath is " << filePath;
     }
+
+    emit complete(filePaths);
 }

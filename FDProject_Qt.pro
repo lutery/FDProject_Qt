@@ -7,7 +7,8 @@ SOURCES += main.cpp \
     checkblockobject.cpp \
     testthread.cpp \
     fdservice.cpp \
-    analysisthread.cpp
+    analysisthread.cpp \
+    unlockthread.cpp
 
 RESOURCES += qml.qrc
 
@@ -40,6 +41,7 @@ HEADERS += \
     checkblockobject.h \
     testthread.h \
     fdservice.h \
-    analysisthread.h
+    analysisthread.h \
+    unlockthread.h
 
 win32: LIBS += -L$$PWD/Lib/x64/ -lPsapi

@@ -21,13 +21,13 @@ signals:
 
 public slots:
     void analysis(QString filePath);
+    void unlockHandle(QString filePathName);
 
 private:
     bool mbAnalyse;
     QVector<std::shared_ptr<ncFileHandle>> mHandles;
 
-public:
-
+    bool CloseRemoteHandle(DWORD dwProcessId, HANDLE hRemoteHandle);
 };
 
 #endif // FDOBJECT_H
