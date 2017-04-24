@@ -387,11 +387,6 @@ void FDObject::unlockHandle(QString filePathName)
             continue;
         }
 
-        if (hProc != NULL)
-        {
-            CloseHandle(hProc);
-        }
-
         tstring filePath;
         if (FDObjectHelper::GetHandlePath(handle, filePath) && filePath.find(filePathName.toStdWString()) != tstring::npos)
         {
@@ -404,8 +399,25 @@ void FDObject::unlockHandle(QString filePathName)
 //            std::shared_ptr<ncFileHandle> pFh = std::shared_ptr<ncFileHandle>(new ncFileHandle(pshi->Handles[i], filePath, path));
 //            qDebug() << "QDebug is " << QString::fromUtf16((const ushort*)path.c_str());
 //            mHandles.push_back(pFh);
+            if (handle != INVALID_HANDLE_VALUE)
+            {
+                CloseHandle(handle);
+            }
+
+            DuplicateHandle(hProc, (HANDLE)pshi->Handles[i].wValue, hCrtProc, &handle, 0, FALSE, DUPLICATE_CLOSE_SOURCE);
+
+            if (handle != INVALID_HANDLE_VALUE)
+            {
+                CloseHandle(handle);
+            }
 
             this->CloseRemoteHandle(pshi->Handles[i].dwProcessId, (HANDLE)pshi->Handles[i].wValue);
+        }
+
+
+        if (hProc != NULL)
+        {
+            CloseHandle(hProc);
         }
     }
 
