@@ -35,6 +35,9 @@
 //    }
 //}
 
+/**
+ * @brief The FDObjectHelper class FDObject对象帮助类
+ */
 class FDObjectHelper : public QObject
 {
     Q_OBJECT
@@ -94,6 +97,11 @@ public:
 //        }
 //    }
 
+    /**
+     * @brief IsBlockingHandle 判断是否是管道占用
+     * @param handle 待判断的句柄
+     * @return
+     */
     static BOOL IsBlockingHandle(HANDLE handle)
     {
 //        HANDLE hThread = (HANDLE)_beginthread(FDObjectHelper::CheckBlockThreadFunc, 0, (void*)handle);
@@ -110,11 +118,15 @@ public:
 //        cbObject.moveToThread(&thread);
 //        QObject::connect(&thread, SIGNAL(started()), &cbObject, SLOT(start()));
         CheckBlockThread* thread = new CheckBlockThread(handle);
+        // 连接线程执行完成信号与线程释放自身槽
+        // Todo 这里可能存在内存泄漏，需要仔细的检查
         QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
         thread->start();
 //        QThread::msleep(500);
 
 //        qDebug() << "start wait";
+        // 这里等待1s，通常来说，如果是管道占用，这里基本不会返回
+        // 如果超时，这里返回的是false
         if (!thread->wait(1000))
         {
 //            qDebug() << "time out wait";
@@ -125,15 +137,21 @@ public:
 //        qDebug() << "end wait";
 //        qDebug() << "        ";
 
+        // 终端线程，等待执行结束
         thread->terminate();
         thread->wait();
 
         return FALSE;
     }
 
+    /**
+     * @brief GetDeviceDriveMap 获取设备路径与驱动路径之间的映射表
+     * @param mapDeviceDrive 接收映射表map
+     */
     static void GetDeviceDriveMap(std::unordered_map<tstring, tstring>& mapDeviceDrive)
     {
         TCHAR szDrives[512];
+        // 枚举系统所有的逻辑驱动器，这边返回的是一个以空字符为分隔符的字符串
         if (!GetLogicalDriveStrings(_countof(szDrives) - 1, szDrives))
         {
             return;
@@ -145,17 +163,25 @@ public:
         do{
             *szDrive = *lpDrives;
 
+            // 根据逻辑驱动器获取NT设备路径并存储起来
             if (QueryDosDevice(szDrive, szDevice, MAX_PATH))
             {
                 mapDeviceDrive[szDevice] = szDrive;
             }
 
+            // 遍历到下一个驱动器
             while(*lpDrives++);
         } while (*lpDrives);
     }
 
+    /**
+     * @brief DevicePathToDrivePath 将设备路径形式转换为驱动路径形式
+     * @param path 设备路径形式的路径
+     * @return 返回true表示转换成功，返回false表示转换失败
+     */
     static BOOL DevicePathToDrivePath(tstring& path)
     {
+        // 获取所有的设备路径映射到驱动路径的映射表
         static std::unordered_map<tstring, tstring> mapDeviceDrive;
 
         if (mapDeviceDrive.empty())
@@ -163,6 +189,7 @@ public:
             FDObjectHelper::GetDeviceDriveMap(mapDeviceDrive);
         }
 
+        // 本来想用QHash，可视不支持tstring
 //        QHashIterator<tstring, tstring> hashIter(mapDeviceDrive);
 //        while (hashIter.hasNext())
 //        {
@@ -176,6 +203,7 @@ public:
 //            }
 //        }
 
+        // 遍历映射表，替换路径形式
         for (std::unordered_multimap<tstring, tstring>::iterator iter = mapDeviceDrive.begin(); iter != mapDeviceDrive.end(); ++iter)
         {
             size_t nLength = iter->first.length();
@@ -189,6 +217,12 @@ public:
         return FALSE;
     }
 
+    /**
+     * @brief GetHandlePath 获取句柄的文件路径
+     * @param handle 待获取路径的句柄
+     * @param path 返回路径信息
+     * @return 返回true表示获取成功，返回false表示获取失败
+     */
     static BOOL GetHandlePath(HANDLE handle, tstring& path)
     {
         static NTQUERYOBJECT fpNtQueryObject = (NTQUERYOBJECT)GetProcAddress(GetModuleHandle(_T("ntdll")), "NtQueryObject");
@@ -200,6 +234,7 @@ public:
 
         DWORD dwLength = 0;
         OBJECT_NAME_INFORMATION info;
+        // 获取需要的存储空间大小
         NTSTATUS status = fpNtQueryObject(handle, C_OBJECT_INFORMATION_CLASS::ObjectNameInformation, &info, sizeof(info), &dwLength);
         if (status != STATUS_BUFFER_OVERFLOW)
         {
@@ -209,6 +244,7 @@ public:
         POBJECT_NAME_INFORMATION pInfo = (POBJECT_NAME_INFORMATION)malloc(dwLength);
         while (true)
         {
+            // 申请内存知道申请成功，申请的句柄信息为C_OBJECT_INFORMATION_CLASS::ObjectNameInformation
             status = fpNtQueryObject(handle, C_OBJECT_INFORMATION_CLASS::ObjectNameInformation, pInfo, dwLength, &dwLength);
 
             if (status != STATUS_BUFFER_OVERFLOW)
@@ -222,6 +258,7 @@ public:
         BOOL bRes = FALSE;
         if (NT_SUCCESS(status))
         {
+            // 获取路径信息，并转换为逻辑驱动器形式
             path = pInfo->Name.Buffer;
             bRes = FDObjectHelper::DevicePathToDrivePath(path);
         }
@@ -242,6 +279,10 @@ FDObject::~FDObject()
 
 }
 
+/**
+ * @brief FDObject::analysis
+ * @param filePathName
+ */
 void FDObject::analysis(QString filePathName)
 {
     mHandles.clear();

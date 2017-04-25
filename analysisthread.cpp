@@ -12,9 +12,13 @@ AnalysisThread::AnalysisThread(QString filePath, QObject *parent) : QThread(pare
     this->mFilePath = filePath;
 }
 
+/**
+ * @brief AnalysisThread::run 子线程执行主体
+ */
 void AnalysisThread::run()
 {
     FDObject fdObject;
+    // 连接FDObject解析完成信号到分析线程解析完成信号，执行信号转发
     QObject::connect(&fdObject, SIGNAL(onComplete(bool,QStringList)), this, SIGNAL(onComplete(bool,QStringList)));
     qDebug() << "start run";
     fdObject.analysis(mFilePath);

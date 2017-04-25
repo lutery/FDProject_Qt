@@ -18,6 +18,9 @@
 //    HANDLE mCheckHandle;
 //};
 
+/**
+ * @brief The CheckBlockThread class 判断是否是管道占用线程
+ */
 class CheckBlockThread : public QThread
 {
 public:
@@ -27,6 +30,7 @@ protected:
     void run() override;
 
 private:
+    // 待判断的句柄
     HANDLE mCheckHandle;
 };
 
