@@ -281,7 +281,7 @@ FDObject::~FDObject()
 
 /**
  * @brief FDObject::analysis
- * @param filePathName
+ * @param filePathName 需要分析文件的路径，只能为windows斜杠路径心事
  */
 void FDObject::analysis(QString filePathName)
 {
@@ -294,6 +294,7 @@ void FDObject::analysis(QString filePathName)
         return;
     }
 
+    // 创建NUL文件句柄，用于过滤选择出文件句柄类型
     ncScopedHandle hTempFile = CreateFile(_T("NUL"), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
     if (hTempFile == NULL)
     {
@@ -301,6 +302,7 @@ void FDObject::analysis(QString filePathName)
         return;
     }
 
+    // 获取系统的所有的句柄信息
     PSYSTEM_HANDLE_INFORMATION pshi = FDObjectHelper::GetSystemHandleInfo();
     if (pshi == NULL)
     {
@@ -311,6 +313,7 @@ void FDObject::analysis(QString filePathName)
     BYTE nFileType = 0;
     DWORD dwCrtPid = GetCurrentProcessId();
 
+    // 根据自身进程ID以及打开的文件句柄，获取文件句柄的具体类型值，用于后面从所有句柄中过滤
     for (DWORD i = 0; i < pshi->dwCount; ++i)
     {
         if (pshi->Handles[i].dwProcessId == dwCrtPid && hTempFile == (HANDLE)pshi->Handles[i].wValue)
@@ -323,6 +326,7 @@ void FDObject::analysis(QString filePathName)
     HANDLE hCrtProc = GetCurrentProcess();
     for (DWORD i = 0; i < pshi->dwCount; ++i)
     {
+        // 判断是否是文件句柄
         if (pshi->Handles[i].bObjectType != nFileType)
         {
             continue;
@@ -330,24 +334,29 @@ void FDObject::analysis(QString filePathName)
 
         ncScopedHandle handle = NULL;
         ncScopedHandle hProc = OpenProcess(PROCESS_DUP_HANDLE, FALSE, pshi->Handles[i].dwProcessId);
+        // 根据目标进程获取相同权限的文件句柄
         if (hProc == NULL || !DuplicateHandle(hProc, (HANDLE)pshi->Handles[i].wValue, hCrtProc, &handle, 0, FALSE, DUPLICATE_SAME_ACCESS))
         {
             continue;
         }
 
+        // 判断是否是管道占用，因为管道占用的句柄如果获取句柄信息会导致线程卡死
         if (FDObjectHelper::IsBlockingHandle(handle))
         {
             continue;
         }
 
         tstring filePath;
+        // 根据句柄获取文件的路径（此时的路径是NT方式表示的路径）并且判断这个文件路径是否就是我们需要的文件
         if (FDObjectHelper::GetHandlePath(handle, filePath) && filePath.find(filePathName.toStdWString()) != tstring::npos)
         {
             ncScopedHandle hProcess = OpenProcess(MAXIMUM_ALLOWED, FALSE, pshi->Handles[i].dwProcessId);
 
             TCHAR szProcName[MAX_PATH];
+            // 获取进程的可执行文件的路径信息
             GetProcessImageFileName(hProcess, szProcName, MAX_PATH);
             tstring path(szProcName);
+            // 将可执行文件的路径信息转换为逻辑驱动器形式
             FDObjectHelper::DevicePathToDrivePath(path);
             std::shared_ptr<ncFileHandle> pFh = std::shared_ptr<ncFileHandle>(new ncFileHandle(pshi->Handles[i], filePath, path));
 //            std::wstring wstring = szProcName;
@@ -359,10 +368,12 @@ void FDObject::analysis(QString filePathName)
     free(pshi);
 
     mbAnalyse = true;
+    // 分析完成，发送信号
     emit this->analysisComplete(true, mHandles);
 
     QStringList handlePathList;
 
+    // 分析完成，发送简略信号
     for (std::shared_ptr<ncFileHandle> pFH : mHandles)
     {
         handlePathList.append(QString::fromStdWString(pFH->_path.c_str()));
@@ -374,6 +385,10 @@ void FDObject::analysis(QString filePathName)
     return;
 }
 
+/**
+ * @brief FDObject::unlockHandle 解锁指定文件的占用
+ * @param filePathName 文件路径
+ */
 void FDObject::unlockHandle(QString filePathName)
 {
     mHandles.clear();
@@ -440,18 +455,24 @@ void FDObject::unlockHandle(QString filePathName)
 //            std::shared_ptr<ncFileHandle> pFh = std::shared_ptr<ncFileHandle>(new ncFileHandle(pshi->Handles[i], filePath, path));
 //            qDebug() << "QDebug is " << QString::fromUtf16((const ushort*)path.c_str());
 //            mHandles.push_back(pFh);
+
+            // 关闭之前复制得到的句柄信息
             if (handle != INVALID_HANDLE_VALUE)
             {
                 CloseHandle(handle);
             }
 
+            // 关闭目标进程句柄
             DuplicateHandle(hProc, (HANDLE)pshi->Handles[i].wValue, hCrtProc, &handle, 0, FALSE, DUPLICATE_CLOSE_SOURCE);
 
+            // 关闭获取的句柄
             if (handle != INVALID_HANDLE_VALUE)
             {
                 CloseHandle(handle);
             }
 
+            // 使用远程注入的方式关闭句柄
+            // Todo 这句可能不需要，后期验证
             this->CloseRemoteHandle(pshi->Handles[i].dwProcessId, (HANDLE)pshi->Handles[i].wValue);
         }
 
@@ -482,6 +503,7 @@ bool FDObject::CloseRemoteHandle(DWORD dwProcessId, HANDLE hRemoteHandle)
     HANDLE hProcess = NULL;
     HMODULE hKernel32Module = NULL;
 
+    // 打开目标进程
     hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, dwProcessId);
 
     if (NULL == hProcess)
@@ -497,6 +519,7 @@ bool FDObject::CloseRemoteHandle(DWORD dwProcessId, HANDLE hRemoteHandle)
         goto ErrorExit;
     }
 
+    // 创建远程进程
     hExecutHandle = CreateRemoteThread(hProcess, 0, 0, (DWORD (__stdcall *)(void *))GetProcAddress(hKernel32Module, "CloseHandle"), hRemoteHandle, 0, NULL);
 
     if (NULL == hExecutHandle)
@@ -505,6 +528,7 @@ bool FDObject::CloseRemoteHandle(DWORD dwProcessId, HANDLE hRemoteHandle)
         goto ErrorExit;
     }
 
+    // 等待远程进程执行结束
     if (WaitForSingleObject(hExecutHandle, 2000) == WAIT_OBJECT_0)
     {
         bFlag = TRUE;

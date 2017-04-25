@@ -22,10 +22,18 @@ FDService::~FDService()
 
     if (this->mpAnalysis != nullptr)
     {
-        this->mpAnalysis->quit();
+        this->mpAnalysis->terminate();
         this->mpAnalysis->wait();
         delete this->mpAnalysis;
         this->mpAnalysis = nullptr;
+    }
+
+    if (this->mpUnlock != nullptr)
+    {
+        this->mpUnlock->terminate();
+        this->mpUnlock->wait();
+        delete this->mpUnlock;
+        this->mpUnlock = nullptr;
     }
 }
 

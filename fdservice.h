@@ -7,6 +7,9 @@ class FDObject;
 class AnalysisThread;
 class UnlockThread;
 
+/**
+ * @brief The FDService class 解锁删除服务
+ */
 class FDService : public QObject
 {
     Q_OBJECT
@@ -15,6 +18,7 @@ public:
     ~FDService();
 
 signals:
+    // 查询完成信号
     void complete(QStringList filePaths);
 
 public slots:
@@ -23,8 +27,11 @@ public slots:
     void analysisComplete(bool isReady, QStringList filePaths);
 
 private:
+    // 删除解锁Object执行体
     FDObject* mpFDObject;
+    // 分析子线程
     AnalysisThread* mpAnalysis;
+    // 解锁子线程
     UnlockThread* mpUnlock;
 };
 
