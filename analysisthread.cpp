@@ -2,6 +2,11 @@
 #include "fdobject.h"
 #include <QDebug>
 
+/**
+ * @brief AnalysisThread::AnalysisThread
+ * @param filePath 需要分析文件的路径
+ * @param parent QObject父类对象
+ */
 AnalysisThread::AnalysisThread(QString filePath, QObject *parent) : QThread(parent)
 {
     this->mFilePath = filePath;
