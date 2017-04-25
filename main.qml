@@ -92,6 +92,7 @@ ApplicationWindow {
                 anchors.margins: 2
                 anchors.fill: parent
                 model: fileModel
+                clip: true
 //                delegate: Rectangle {
 //                    height: 25
 ////                    width: 100
@@ -150,6 +151,7 @@ ApplicationWindow {
 
                 anchors.margins: 2
                 anchors.fill: parent
+                clip: true
                 model: progressModel
                 delegate: Rectangle {
                     height: 25
