@@ -5,6 +5,7 @@
 #include <QThread>
 #include <unordered_map>
 #include <QStringList>
+#include <QFile>
 
 //class CheckBlockObject : public QObject
 //{
@@ -288,9 +289,12 @@ void FDObject::analysis(QString filePathName)
     mHandles.clear();
     mbAnalyse = false;
 
+    QStringList handlePathList;
+
     if (filePathName.length() <= 0)
     {
         emit this->analysisComplete(false, mHandles);
+        emit this->onComplete(false, handlePathList);
         return;
     }
 
@@ -299,6 +303,7 @@ void FDObject::analysis(QString filePathName)
     if (hTempFile == NULL)
     {
         emit this->analysisComplete(false, mHandles);
+        emit this->onComplete(false, handlePathList);
         return;
     }
 
@@ -307,6 +312,7 @@ void FDObject::analysis(QString filePathName)
     if (pshi == NULL)
     {
         emit this->analysisComplete(false, mHandles);
+        emit this->onComplete(false, handlePathList);
         return;
     }
 
@@ -371,8 +377,6 @@ void FDObject::analysis(QString filePathName)
     // 分析完成，发送信号
     emit this->analysisComplete(true, mHandles);
 
-    QStringList handlePathList;
-
     // 分析完成，发送简略信号
     for (std::shared_ptr<ncFileHandle> pFH : mHandles)
     {
@@ -381,34 +385,37 @@ void FDObject::analysis(QString filePathName)
     }
 
     emit this->onComplete(true, handlePathList);
-
-    return;
 }
 
 /**
  * @brief FDObject::unlockHandle 解锁指定文件的占用
  * @param filePathName 文件路径
  */
-void FDObject::unlockHandle(QString filePathName)
+bool FDObject::unlockHandle(QString filePathName)
 {
     mHandles.clear();
     mbAnalyse = false;
 
+    int dReturn = 0;
+
     if (filePathName.length() <= 0)
     {
-        return;
+        emit onUnlock(dReturn != 0);
+        return false;
     }
 
     ncScopedHandle hTempFile = CreateFile(_T("NUL"), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
     if (hTempFile == NULL)
     {
-        return;
+        emit onUnlock(dReturn != 0);
+        return false;
     }
 
     PSYSTEM_HANDLE_INFORMATION pshi = FDObjectHelper::GetSystemHandleInfo();
     if (pshi == NULL)
     {
-        return;
+        emit onUnlock(dReturn != 0);
+        return false;
     }
 
     BYTE nFileType = 0;
@@ -463,7 +470,7 @@ void FDObject::unlockHandle(QString filePathName)
             }
 
             // 关闭目标进程句柄
-            DuplicateHandle(hProc, (HANDLE)pshi->Handles[i].wValue, hCrtProc, &handle, 0, FALSE, DUPLICATE_CLOSE_SOURCE);
+            dReturn = DuplicateHandle(hProc, (HANDLE)pshi->Handles[i].wValue, hCrtProc, &handle, 0, FALSE, DUPLICATE_CLOSE_SOURCE);
 
             // 关闭获取的句柄
             if (handle != INVALID_HANDLE_VALUE)
@@ -472,8 +479,9 @@ void FDObject::unlockHandle(QString filePathName)
             }
 
             // 使用远程注入的方式关闭句柄
-            // Todo 这句可能不需要，后期验证
-            this->CloseRemoteHandle(pshi->Handles[i].dwProcessId, (HANDLE)pshi->Handles[i].wValue);
+            // 已验证，这居可以不需要，本来理论上，复制了原始句柄之后
+            // 创建远程线程，在远程线程地址空间中执行关闭操作，但是实际有问题
+//            this->CloseRemoteHandle(pshi->Handles[i].dwProcessId, (HANDLE)pshi->Handles[i].wValue);
         }
 
 
@@ -486,8 +494,32 @@ void FDObject::unlockHandle(QString filePathName)
     free(pshi);
 
     mbAnalyse = true;
+    emit onUnlock(dReturn != 0);
 
-    return;
+    return true;
+}
+
+void FDObject::deleteFile(QString filePath)
+{
+    QFile* file = new QFile(filePath);
+    bool bDelete = file->remove();
+
+    if (!bDelete)
+    {
+        file->close();
+        bDelete = this->unlockHandle(filePath);
+    }
+
+    delete file;
+    if (bDelete)
+    {
+        file = new QFile(filePath);
+        bDelete = file->remove();
+        file->close();
+    }
+
+    delete file;
+    emit onDelFile(bDelete);
 }
 
 /**

@@ -1,13 +1,45 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
+import QtQuick.Controls.Styles 1.4
 import one.chchy.FDService 1.0
 
 ApplicationWindow {
+    id: idMainWindow
     visible: true
     width: 640
     height: 480
     title: qsTr("检测占用，解除占用")
+
+    Rectangle{
+        id: idprogressBar
+        anchors.fill: parent
+        color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
+        visible: false
+
+        ProgressBar{
+            anchors.centerIn: parent
+            indeterminate: true
+
+//            value: slider.value
+//            style: ProgressBarStyle {
+//                background: Rectangle {
+//                    radius: 2
+//                    color: "lightgray"
+//                    border.color: "gray"
+//                    border.width: 1
+//                    implicitWidth: 200
+//                    implicitHeight: 24
+//                }
+//                progress: Rectangle {
+//                    color: "lightsteelblue"
+//                    border.color: "steelblue"
+//                }
+//            }
+        }
+
+        z: 10
+    }
 
     FDService{
         id: fdObject
@@ -18,6 +50,20 @@ ApplicationWindow {
                                       "progressInfo" : filePaths[index]
                                      })
             }
+
+            idprogressBar.visible = false;
+        }
+
+        onUnlock: {
+            idprogressBar.visible = false;
+        }
+
+        onDelcomplete: {
+
+        }
+
+        onCrush: {
+
         }
     }
 
@@ -180,6 +226,7 @@ ApplicationWindow {
                         var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
                         console.log(fileUrl)
                         fdObject.analysis(fileUrl)
+                        idprogressBar.visible = true;
                     }
                 }
             }
@@ -191,12 +238,30 @@ ApplicationWindow {
                         var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
                         console.log(fileUrl)
                         fdObject.unlockHandle(fileUrl)
+                        idprogressBar.visible = true;
                     }
                 }
             }
 
             Button{
+                text: "删除"
+                onClicked: {
+
+                }
+            }
+
+            Button{
+                text: "粉碎"
+                onClicked: {
+
+                }
+            }
+
+            Button{
                 text: "取消"
+                onClicked: {
+                    idMainWindow.close();
+                }
             }
         }
 

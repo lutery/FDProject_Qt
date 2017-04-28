@@ -10,7 +10,7 @@ UnlockThread::UnlockThread(QString filePath, QObject *parent) : QThread(parent)
 void UnlockThread::run()
 {
     FDObject fdObject;
-//    QObject::connect(&fdObject, SIGNAL())
+    QObject::connect(&fdObject, SIGNAL(onUnlock(bool)), this, SIGNAL(onUnlock(bool)));
     qDebug() << "start unlock";
     fdObject.unlockHandle(this->mFilePath);
     qDebug() << "end unlock";

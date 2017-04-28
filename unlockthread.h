@@ -11,6 +11,7 @@ public:
     explicit UnlockThread(QString filePath, QObject *parent = 0);
 
 signals:
+    void onUnlock(bool);
 
 public slots:
 

@@ -42,10 +42,10 @@ void CheckBlockThread::run()
     {
         BYTE buf[1024];
         IO_STATUS_BLOCK ioStatus;
-        qDebug() << "check block query";
+        qDebug() << "start check block query";
         // 如果句柄是管道句柄，那么这个函数将不会返回，卡住线程
         fpNtQueryInformationFile(mCheckHandle, &ioStatus, buf, 1024, FileNameInformation);
     }
 
-    qDebug() << "check block query";
+    qDebug() << "end check block query";
 }

@@ -42,7 +42,11 @@ void FDService::analysis(QString filePath)
    qDebug() << "FDService analysis";
    if (this->mpAnalysis != nullptr)
    {
-       return;
+       this->mpAnalysis->terminate();
+       this->mpAnalysis->wait();
+
+       delete this->mpAnalysis;
+       this->mpAnalysis = nullptr;
    }
 
    this->mpAnalysis = new AnalysisThread(filePath);
@@ -54,11 +58,26 @@ void FDService::unlockHandle(QString filePath)
 {
     if (this->mpUnlock != nullptr)
     {
-        return;
+        this->mpUnlock->terminate();
+        this->mpUnlock->wait();
+
+        delete this->mpUnlock;
+        this->mpUnlock = nullptr;
     }
 
     this->mpUnlock = new UnlockThread(filePath);
+    connect((this->mpUnlock), SIGNAL(onUnlock(bool)), this, SIGNAL(unlock(bool)));
     this->mpUnlock->start();
+}
+
+void FDService::deleteFile(QString filePath)
+{
+
+}
+
+void FDService::curshFile(QString filePath)
+{
+
 }
 
 void FDService::analysisComplete(bool isReady, QStringList filePaths)

@@ -23,10 +23,13 @@ signals:
     void analysisComplete(bool, QVector<std::shared_ptr<ncFileHandle>>);
     // 分析完成信号，简略信息，仅具备占用可执文件的路径信息
     void onComplete(bool, QStringList);
+    void onUnlock(bool);
+    void onDelFile(bool);
 
 public slots:
     void analysis(QString filePath);
-    void unlockHandle(QString filePathName);
+    bool unlockHandle(QString filePath);
+    void deleteFile(QString filePath);
 
 private:
     // 分析是否完成
