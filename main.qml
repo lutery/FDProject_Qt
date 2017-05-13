@@ -59,11 +59,11 @@ ApplicationWindow {
         }
 
         onDelcomplete: {
-
+             idprogressBar.visible = false;
         }
 
         onCrush: {
-
+            idprogressBar.visible = false;
         }
     }
 
@@ -246,14 +246,24 @@ ApplicationWindow {
             Button{
                 text: "删除"
                 onClicked: {
-
+                    if (listFiles.currentIndex >= 0){
+                        var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
+                        console.log(fileUrl)
+                        fdObject.deleteFile(fileUrl)
+                        idprogressBar.visible = true;
+                    }
                 }
             }
 
             Button{
                 text: "粉碎"
                 onClicked: {
-
+                    if (listFiles.currentIndex >= 0){
+                        var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
+                        console.log(fileUrl)
+                        fdObject.curshFile(fileUrl)
+                        idprogressBar.visible = true;
+                    }
                 }
             }
 

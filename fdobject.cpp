@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <QStringList>
 #include <QFile>
+#include <QDataStream>
 
 //class CheckBlockObject : public QObject
 //{
@@ -520,6 +521,48 @@ void FDObject::deleteFile(QString filePath)
 
     delete file;
     emit onDelFile(bDelete);
+}
+
+void FDObject::crushFile(QString filePath)
+{
+    bool bUnlock = this->unlockHandle(filePath);
+
+    if (!bUnlock)
+    {
+        emit onCurshFile(false);
+        return;
+    }
+
+    QFile* file = new QFile(filePath);
+    qint64 fileSize = file->size();
+    int coverNum = 3;
+    constexpr int buffSize = 4096;
+    byte* buff = new byte[buffSize];
+    memset(buff, 0, buffSize);
+
+    while (coverNum-- > 0)
+    {
+        if (!file->open(QIODevice::WriteOnly | QIODevice::Append))
+        {
+            delete file;
+            emit onCurshFile(false);
+            return;
+        }
+
+        QDataStream out(file);
+
+        qint64 tempSize = 0;
+
+        while ((tempSize += buffSize) < fileSize)
+        {
+            out.writeBytes((char*)buff, buffSize);
+        }
+
+        file->close();
+    }
+
+    delete[] buff;
+    emit onCurshFile(file->remove());
 }
 
 /**

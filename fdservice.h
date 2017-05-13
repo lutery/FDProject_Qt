@@ -6,6 +6,8 @@
 class FDObject;
 class AnalysisThread;
 class UnlockThread;
+class DeleteThread;
+class CurshFileThread;
 
 /**
  * @brief The FDService class 解锁删除服务
@@ -38,6 +40,10 @@ private:
     AnalysisThread* mpAnalysis;
     // 解锁子线程
     UnlockThread* mpUnlock;
+
+    DeleteThread* mpTDelete;
+
+    CurshFileThread* mpTCursh;
 };
 
 #endif // FDSERVICE_H

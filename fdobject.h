@@ -25,11 +25,13 @@ signals:
     void onComplete(bool, QStringList);
     void onUnlock(bool);
     void onDelFile(bool);
+    void onCurshFile(bool);
 
 public slots:
     void analysis(QString filePath);
     bool unlockHandle(QString filePath);
     void deleteFile(QString filePath);
+    void crushFile(QString filePath);
 
 private:
     // 分析是否完成

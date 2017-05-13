@@ -1,6 +1,8 @@
 #include "fdservice.h"
 #include "analysisthread.h"
 #include "unlockthread.h"
+#include "deletethread.h"
+#include "curshfilethread.h"
 #include <fdobject.h>
 #include <QDebug>
 
@@ -10,6 +12,8 @@ FDService::FDService(QObject *parent) : QObject(parent)
     this->mpFDObject = new FDObject();
     this->mpAnalysis = nullptr;
     this->mpUnlock = nullptr;
+    this->mpTDelete = nullptr;
+    this->mpTCursh = nullptr;
 }
 
 FDService::~FDService()
@@ -20,21 +24,26 @@ FDService::~FDService()
         this->mpFDObject = nullptr;
     }
 
-    if (this->mpAnalysis != nullptr)
-    {
-        this->mpAnalysis->terminate();
-        this->mpAnalysis->wait();
-        delete this->mpAnalysis;
-        this->mpAnalysis = nullptr;
-    }
+//    if (this->mpAnalysis != nullptr)
+//    {
+//        this->mpAnalysis->terminate();
+//        this->mpAnalysis->wait();
+//        delete this->mpAnalysis;
+//        this->mpAnalysis = nullptr;
+//    }
 
-    if (this->mpUnlock != nullptr)
-    {
-        this->mpUnlock->terminate();
-        this->mpUnlock->wait();
-        delete this->mpUnlock;
-        this->mpUnlock = nullptr;
-    }
+//    if (this->mpUnlock != nullptr)
+//    {
+//        this->mpUnlock->terminate();
+//        this->mpUnlock->wait();
+//        delete this->mpUnlock;
+//        this->mpUnlock = nullptr;
+//    }
+
+    stopThread(this->mpAnalysis);
+    stopThread(this->mpUnlock);
+    stopThread(this->mpTDelete);
+    stopThread(this->mpTCursh);
 }
 
 void FDService::analysis(QString filePath)
@@ -72,12 +81,22 @@ void FDService::unlockHandle(QString filePath)
 
 void FDService::deleteFile(QString filePath)
 {
+    qDebug() << "FDService delete file start";
+    stopThread(this->mpTDelete);
 
+    this->mpTDelete = new DeleteThread(filePath);
+    connect((this->mpTDelete), SIGNAL(onDelFile(bool)), this, SIGNAL(delcomplete(bool)));
+    this->mpTDelete->start();
 }
 
 void FDService::curshFile(QString filePath)
 {
+    qDebug() << "FDService curshFile start";
+    stopThread(this->mpTCursh);
 
+    this->mpTCursh = new CurshFileThread(filePath);
+    connect(this->mpTCursh, SIGNAL(onCurshFile(bool)), this, SIGNAL(crush(bool)));
+    this->mpTCursh->start();
 }
 
 void FDService::analysisComplete(bool isReady, QStringList filePaths)

@@ -128,4 +128,16 @@ struct ncFileHandle
     }
 };
 
+template<class T>
+void stopThread(T& myThread)
+{
+    if (myThread != nullptr && myThread->isRunning())
+    {
+        myThread->terminate();
+        myThread->wait();
+        delete myThread;
+        myThread = nullptr;
+    }
+}
+
 #endif // PREDEFINE_H

@@ -8,7 +8,9 @@ SOURCES += main.cpp \
     testthread.cpp \
     fdservice.cpp \
     analysisthread.cpp \
-    unlockthread.cpp
+    unlockthread.cpp \
+    deletethread.cpp \
+    curshfilethread.cpp
 
 RESOURCES += qml.qrc
 
@@ -42,6 +44,8 @@ HEADERS += \
     testthread.h \
     fdservice.h \
     analysisthread.h \
-    unlockthread.h
+    unlockthread.h \
+    deletethread.h \
+    curshfilethread.h
 
 win32: LIBS += -L$$PWD/Lib/x64/ -lPsapi
