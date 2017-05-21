@@ -49,14 +49,15 @@ FDService::~FDService()
 void FDService::analysis(QString filePath)
 {
    qDebug() << "FDService analysis";
-   if (this->mpAnalysis != nullptr)
-   {
-       this->mpAnalysis->terminate();
-       this->mpAnalysis->wait();
+//   if (this->mpAnalysis != nullptr)
+//   {
+//       this->mpAnalysis->terminate();
+//       this->mpAnalysis->wait();
 
-       delete this->mpAnalysis;
-       this->mpAnalysis = nullptr;
-   }
+//       delete this->mpAnalysis;
+//       this->mpAnalysis = nullptr;
+//   }
+   stopThread(this->mpAnalysis);
 
    this->mpAnalysis = new AnalysisThread(filePath);
    connect((this->mpAnalysis), SIGNAL(onComplete(bool,QStringList)), this, SLOT(analysisComplete(bool,QStringList)));
@@ -65,14 +66,15 @@ void FDService::analysis(QString filePath)
 
 void FDService::unlockHandle(QString filePath)
 {
-    if (this->mpUnlock != nullptr)
-    {
-        this->mpUnlock->terminate();
-        this->mpUnlock->wait();
+//    if (this->mpUnlock != nullptr)
+//    {
+//        this->mpUnlock->terminate();
+//        this->mpUnlock->wait();
 
-        delete this->mpUnlock;
-        this->mpUnlock = nullptr;
-    }
+//        delete this->mpUnlock;
+//        this->mpUnlock = nullptr;
+//    }
+    stopThread(this->mpUnlock);
 
     this->mpUnlock = new UnlockThread(filePath);
     connect((this->mpUnlock), SIGNAL(onUnlock(bool)), this, SIGNAL(unlock(bool)));

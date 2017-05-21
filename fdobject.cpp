@@ -500,18 +500,28 @@ bool FDObject::unlockHandle(QString filePathName)
     return true;
 }
 
+/**
+ * @brief FDObject::deleteFile 删除目标文件
+ * @param filePath 文件的路径
+ */
 void FDObject::deleteFile(QString filePath)
 {
+    // 首先尝试直接删除文件
     QFile* file = new QFile(filePath);
     bool bDelete = file->remove();
 
-    if (!bDelete)
+    if (bDelete)
     {
-        file->close();
-        bDelete = this->unlockHandle(filePath);
+        emit onDelFile(bDelete);
+        return;
     }
 
+    // 删除失败解锁文件
+    file->close();
+    bDelete = this->unlockHandle(filePath);
+
     delete file;
+    // 解锁成功，删除文件
     if (bDelete)
     {
         file = new QFile(filePath);
@@ -522,17 +532,23 @@ void FDObject::deleteFile(QString filePath)
     delete file;
     emit onDelFile(bDelete);
 }
-
+/**
+ * @brief FDObject::crushFile 粉碎文件
+ * @param filePath 需要粉碎文件的路径
+ */
 void FDObject::crushFile(QString filePath)
 {
+    // 首先解锁文件
     bool bUnlock = this->unlockHandle(filePath);
 
+    // 解锁失败
     if (!bUnlock)
     {
         emit onCurshFile(false);
         return;
     }
 
+    // 重复写入文件
     QFile* file = new QFile(filePath);
     qint64 fileSize = file->size();
     int coverNum = 3;
@@ -558,6 +574,7 @@ void FDObject::crushFile(QString filePath)
             out.writeBytes((char*)buff, buffSize);
         }
 
+        file->flush();
         file->close();
     }
 

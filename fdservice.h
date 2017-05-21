@@ -40,9 +40,9 @@ private:
     AnalysisThread* mpAnalysis;
     // 解锁子线程
     UnlockThread* mpUnlock;
-
+    // 删除子线程
     DeleteThread* mpTDelete;
-
+    // 粉碎子线程
     CurshFileThread* mpTCursh;
 };
 
