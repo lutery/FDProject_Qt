@@ -10,7 +10,43 @@ SOURCES += main.cpp \
     analysisthread.cpp \
     unlockthread.cpp \
     deletethread.cpp \
-    curshfilethread.cpp
+    curshfilethread.cpp \
+    fdtask.cpp \
+    taskcenter.cpp \
+    analysisthread.cpp \
+    checkblockobject.cpp \
+    curshfilethread.cpp \
+    deletethread.cpp \
+    fdobject.cpp \
+    fdservice.cpp \
+    fdtask.cpp \
+    main.cpp \
+    taskcenter.cpp \
+    testthread.cpp \
+    unlockthread.cpp \
+    analysisthread.cpp \
+    checkblockobject.cpp \
+    curshfilethread.cpp \
+    deletethread.cpp \
+    fdobject.cpp \
+    fdservice.cpp \
+    fdtask.cpp \
+    main.cpp \
+    taskcenter.cpp \
+    testthread.cpp \
+    unlockthread.cpp \
+    analysisthread.cpp \
+    checkblockobject.cpp \
+    curshfilethread.cpp \
+    deletethread.cpp \
+    fdobject.cpp \
+    fdservice.cpp \
+    fdtask.cpp \
+    main.cpp \
+    taskcenter.cpp \
+    testthread.cpp \
+    unlockthread.cpp \
+    analysistask.cpp
 
 RESOURCES += qml.qrc
 
@@ -46,6 +82,42 @@ HEADERS += \
     analysisthread.h \
     unlockthread.h \
     deletethread.h \
-    curshfilethread.h
+    curshfilethread.h \
+    fdtask.h \
+    taskcenter.h \
+    analysisthread.h \
+    checkblockobject.h \
+    curshfilethread.h \
+    deletethread.h \
+    fdobject.h \
+    fdservice.h \
+    fdtask.h \
+    predefine.h \
+    taskcenter.h \
+    testthread.h \
+    unlockthread.h \
+    analysisthread.h \
+    checkblockobject.h \
+    curshfilethread.h \
+    deletethread.h \
+    fdobject.h \
+    fdservice.h \
+    fdtask.h \
+    predefine.h \
+    taskcenter.h \
+    testthread.h \
+    unlockthread.h \
+    analysisthread.h \
+    checkblockobject.h \
+    curshfilethread.h \
+    deletethread.h \
+    fdobject.h \
+    fdservice.h \
+    fdtask.h \
+    predefine.h \
+    taskcenter.h \
+    testthread.h \
+    unlockthread.h \
+    analysistask.h
 
 win32: LIBS += -L$$PWD/Lib/x64/ -lPsapi
