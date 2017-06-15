@@ -8,11 +8,12 @@ class FDTask : public QObject
     Q_OBJECT
 public:
     explicit FDTask(QObject *parent = nullptr);
+    virtual ~FDTask();
 
 signals:
 
 public slots:
-    virtual void execTask();
+    virtual void execTask() = 0;
 
 public:
     int getTaskID();

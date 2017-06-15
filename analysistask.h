@@ -7,6 +7,7 @@ class AnalysisTask : public FDTask
 {
 public:
     explicit AnalysisTask(QString filePath, QObject* parent = nullptr);
+    virtual ~AnalysisTask();
 
 public slots:
     void execTask() override;
