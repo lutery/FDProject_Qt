@@ -133,6 +133,7 @@ void stopThread(T& myThread)
 {
     if (myThread != nullptr && myThread->isRunning())
     {
+        myThread->quit();
         myThread->terminate();
         myThread->wait();
         delete myThread;

@@ -294,8 +294,9 @@ void FDObject::analysis(QString filePathName)
 
     if (filePathName.length() <= 0)
     {
-        emit this->analysisComplete(false, mHandles);
-        emit this->onComplete(false, handlePathList);
+//        emit this->sigAnaComplete(false, mHandles);
+//        emit this->sigAnaComplet(false, handlePathList);
+        this->sendAnalysisSignal(false, mHandles, handlePathList);
         return;
     }
 
@@ -303,8 +304,9 @@ void FDObject::analysis(QString filePathName)
     ncScopedHandle hTempFile = CreateFile(_T("NUL"), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
     if (hTempFile == NULL)
     {
-        emit this->analysisComplete(false, mHandles);
-        emit this->onComplete(false, handlePathList);
+//        emit this->sigAnaComplete(false, mHandles);
+//        emit this->sigAnaComplet(false, handlePathList);
+        this->sendAnalysisSignal(false, mHandles, handlePathList);
         return;
     }
 
@@ -312,8 +314,9 @@ void FDObject::analysis(QString filePathName)
     PSYSTEM_HANDLE_INFORMATION pshi = FDObjectHelper::GetSystemHandleInfo();
     if (pshi == NULL)
     {
-        emit this->analysisComplete(false, mHandles);
-        emit this->onComplete(false, handlePathList);
+//        emit this->sigAnaComplete(false, mHandles);
+//        emit this->sigAnaComplet(false, handlePathList);
+        this->sendAnalysisSignal(false, mHandles, handlePathList);
         return;
     }
 
@@ -376,16 +379,16 @@ void FDObject::analysis(QString filePathName)
 
     mbAnalyse = true;
     // 分析完成，发送信号
-    emit this->analysisComplete(true, mHandles);
+//    emit this->analysisComplete(true, mHandles);
 
     // 分析完成，发送简略信号
     for (std::shared_ptr<ncFileHandle> pFH : mHandles)
     {
         handlePathList.append(QString::fromStdWString(pFH->_path.c_str()));
-//        handlePathList.append(pFH->);
     }
 
-    emit this->onComplete(true, handlePathList);
+//    emit this->onComplete(true, handlePathList);
+    this->sendAnalysisSignal(true, mHandles, handlePathList);
 }
 
 /**
@@ -401,21 +404,21 @@ bool FDObject::unlockHandle(QString filePathName)
 
     if (filePathName.length() <= 0)
     {
-        emit onUnlock(dReturn != 0);
+        emit sigUnlock(dReturn != 0);
         return false;
     }
 
     ncScopedHandle hTempFile = CreateFile(_T("NUL"), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
     if (hTempFile == NULL)
     {
-        emit onUnlock(dReturn != 0);
+        emit sigUnlock(dReturn != 0);
         return false;
     }
 
     PSYSTEM_HANDLE_INFORMATION pshi = FDObjectHelper::GetSystemHandleInfo();
     if (pshi == NULL)
     {
-        emit onUnlock(dReturn != 0);
+        emit sigUnlock(dReturn != 0);
         return false;
     }
 
@@ -495,7 +498,7 @@ bool FDObject::unlockHandle(QString filePathName)
     free(pshi);
 
     mbAnalyse = true;
-    emit onUnlock(dReturn != 0);
+    emit sigUnlock(dReturn != 0);
 
     return true;
 }
@@ -512,7 +515,7 @@ void FDObject::deleteFile(QString filePath)
 
     if (bDelete)
     {
-        emit onDelFile(bDelete);
+        emit sigDelFile(bDelete);
         return;
     }
 
@@ -530,7 +533,7 @@ void FDObject::deleteFile(QString filePath)
     }
 
     delete file;
-    emit onDelFile(bDelete);
+    emit sigDelFile(bDelete);
 }
 /**
  * @brief FDObject::crushFile 粉碎文件
@@ -544,7 +547,7 @@ void FDObject::crushFile(QString filePath)
     // 解锁失败
     if (!bUnlock)
     {
-        emit onCurshFile(false);
+        emit sigCurshFile(false);
         return;
     }
 
@@ -561,7 +564,7 @@ void FDObject::crushFile(QString filePath)
         if (!file->open(QIODevice::WriteOnly | QIODevice::Append))
         {
             delete file;
-            emit onCurshFile(false);
+            emit sigCurshFile(false);
             return;
         }
 
@@ -579,7 +582,7 @@ void FDObject::crushFile(QString filePath)
     }
 
     delete[] buff;
-    emit onCurshFile(file->remove());
+    emit sigCurshFile(file->remove());
 }
 
 /**
@@ -650,4 +653,10 @@ ErrorExit:
     }
 
     return bFlag;
+}
+
+void FDObject::sendAnalysisSignal(bool bSuccess, QVector<std::shared_ptr<ncFileHandle> > pHandles, QStringList paths)
+{
+    emit this->sigAnaComplete(bSuccess, pHandles);
+    emit this->sigAnaComplet(bSuccess, paths);
 }

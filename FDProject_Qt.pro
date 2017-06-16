@@ -48,7 +48,8 @@ SOURCES += main.cpp \
     unlockthread.cpp \
     analysistask.cpp \
     curshfiletask.cpp \
-    deletetask.cpp
+    deletetask.cpp \
+    unlocktask.cpp
 
 RESOURCES += qml.qrc
 
@@ -122,6 +123,7 @@ HEADERS += \
     unlockthread.h \
     analysistask.h \
     curshfiletask.h \
-    deletetask.h
+    deletetask.h \
+    unlocktask.h
 
 win32: LIBS += -L$$PWD/Lib/x64/ -lPsapi

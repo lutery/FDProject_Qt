@@ -20,12 +20,12 @@ public:
 
 signals:
     // 分析完成信号，完整信息，具备完整的信息
-    void analysisComplete(bool, QVector<std::shared_ptr<ncFileHandle>>);
+    void sigAnaComplete(bool, QVector<std::shared_ptr<ncFileHandle>>);
     // 分析完成信号，简略信息，仅具备占用可执文件的路径信息
-    void onComplete(bool, QStringList);
-    void onUnlock(bool);
-    void onDelFile(bool);
-    void onCurshFile(bool);
+    void sigAnaComplet(bool, QStringList);
+    void sigUnlock(bool);
+    void sigDelFile(bool);
+    void sigCurshFile(bool);
 
 public slots:
     void analysis(QString filePath);
@@ -40,6 +40,7 @@ private:
     QVector<std::shared_ptr<ncFileHandle>> mHandles;
 
     bool CloseRemoteHandle(DWORD dwProcessId, HANDLE hRemoteHandle);
+    void sendAnalysisSignal(bool bSuccess, QVector<std::shared_ptr<ncFileHandle>> pHandles, QStringList paths);
 };
 
 #endif // FDOBJECT_H

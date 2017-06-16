@@ -6,7 +6,7 @@
 class DeleteTask : public FDTask
 {
 public:
-    explicit DeleteTask(QString filePath, QObject* parent = null);
+    explicit DeleteTask(QString filePath, QObject* parent = nullptr);
     virtual ~DeleteTask();
 
 public slots:

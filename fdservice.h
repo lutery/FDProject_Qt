@@ -8,6 +8,7 @@ class AnalysisThread;
 class UnlockThread;
 class DeleteThread;
 class CurshFileThread;
+class TaskCenter;
 
 /**
  * @brief The FDService class 解锁删除服务
@@ -35,15 +36,17 @@ public slots:
 
 private:
     // 删除解锁Object执行体
-    FDObject* mpFDObject;
-    // 分析子线程
-    AnalysisThread* mpAnalysis;
-    // 解锁子线程
-    UnlockThread* mpUnlock;
-    // 删除子线程
-    DeleteThread* mpTDelete;
-    // 粉碎子线程
-    CurshFileThread* mpTCursh;
+//    FDObject* mpFDObject;
+//    // 分析子线程
+//    AnalysisThread* mpAnalysis;
+//    // 解锁子线程
+//    UnlockThread* mpUnlock;
+//    // 删除子线程
+//    DeleteThread* mpTDelete;
+//    // 粉碎子线程
+//    CurshFileThread* mpTCursh;
+    // 任务中心
+    TaskCenter* mpTaskCenter;
 };
 
 #endif // FDSERVICE_H
