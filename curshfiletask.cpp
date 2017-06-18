@@ -16,5 +16,5 @@ CurshFileTask::~CurshFileTask()
 void CurshFileTask::execTask()
 {
     FDObject fdObject;
-    fdObject.crushFile(this->mFilePath);
+    fdObject.sltCrushFile(this->mFilePath);
 }

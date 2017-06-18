@@ -28,10 +28,10 @@ signals:
     void sigCurshFile(bool);
 
 public slots:
-    void analysis(QString filePath);
-    bool unlockHandle(QString filePath);
-    void deleteFile(QString filePath);
-    void crushFile(QString filePath);
+    void sltAnalysis(QString filePath);
+    bool sltUnlockHandle(QString filePath);
+    void sltDeleteFile(QString filePath);
+    void sltCrushFile(QString filePath);
 
 private:
     // 分析是否完成

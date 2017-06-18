@@ -9,6 +9,9 @@ public:
     explicit CurshFileTask(QString filePath, QObject* parent = nullptr);
     virtual ~CurshFileTask();
 
+signals:
+    void sigCurshFile(bool);
+
 public slots:
     void execTask() override;
 

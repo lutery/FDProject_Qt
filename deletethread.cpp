@@ -12,6 +12,6 @@ void DeleteThread::run()
     FDObject fdObject;
     QObject::connect(&fdObject, SIGNAL(onDelFile(bool)), this, SIGNAL(onDelFile(bool)));
     qDebug() << "start delete file";
-    fdObject.deleteFile(mFilePath);
+    fdObject.sltDeleteFile(mFilePath);
     qDebug() << "end delete file";
 }

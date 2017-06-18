@@ -14,5 +14,5 @@ AnalysisTask::~AnalysisTask()
 void AnalysisTask::execTask()
 {
     FDObject fdObject;
-    fdObject.analysis(mFilePath);
+    fdObject.sltAnalysis(mFilePath);
 }

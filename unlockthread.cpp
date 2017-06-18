@@ -12,6 +12,6 @@ void UnlockThread::run()
     FDObject fdObject;
     QObject::connect(&fdObject, SIGNAL(onUnlock(bool)), this, SIGNAL(onUnlock(bool)));
     qDebug() << "start unlock";
-    fdObject.unlockHandle(this->mFilePath);
+    fdObject.sltUnlockHandle(this->mFilePath);
     qDebug() << "end unlock";
 }

@@ -21,6 +21,6 @@ void AnalysisThread::run()
     // 连接FDObject解析完成信号到分析线程解析完成信号，执行信号转发
     QObject::connect(&fdObject, SIGNAL(onComplete(bool,QStringList)), this, SIGNAL(onComplete(bool,QStringList)));
     qDebug() << "start run";
-    fdObject.analysis(mFilePath);
+    fdObject.sltAnalysis(mFilePath);
     qDebug() << "end run";
 }

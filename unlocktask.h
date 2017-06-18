@@ -9,6 +9,9 @@ public:
     explicit UnlockTask(QString filePath, QObject* parent = nullptr);
     virtual ~UnlockTask();
 
+signals:
+    void sigUnlook(bool);
+
 public slots:
     void execTask() override;
 

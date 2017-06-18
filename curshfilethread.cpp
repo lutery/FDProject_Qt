@@ -12,6 +12,6 @@ void CurshFileThread::run()
     FDObject fdObject;
     QObject::connect(&fdObject, SIGNAL(onCurshFile(bool)), this, SIGNAL(onCurshFile(bool)));
     qDebug() << "start cursh file";
-    fdObject.crushFile(this->mFilePath);
+    fdObject.sltCrushFile(this->mFilePath);
     qDebug() << "end cursh file";
 }

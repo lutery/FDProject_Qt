@@ -285,7 +285,7 @@ FDObject::~FDObject()
  * @brief FDObject::analysis
  * @param filePathName 需要分析文件的路径，只能为windows斜杠路径心事
  */
-void FDObject::analysis(QString filePathName)
+void FDObject::sltAnalysis(QString filePathName)
 {
     mHandles.clear();
     mbAnalyse = false;
@@ -395,7 +395,7 @@ void FDObject::analysis(QString filePathName)
  * @brief FDObject::unlockHandle 解锁指定文件的占用
  * @param filePathName 文件路径
  */
-bool FDObject::unlockHandle(QString filePathName)
+bool FDObject::sltUnlockHandle(QString filePathName)
 {
     mHandles.clear();
     mbAnalyse = false;
@@ -507,7 +507,7 @@ bool FDObject::unlockHandle(QString filePathName)
  * @brief FDObject::deleteFile 删除目标文件
  * @param filePath 文件的路径
  */
-void FDObject::deleteFile(QString filePath)
+void FDObject::sltDeleteFile(QString filePath)
 {
     // 首先尝试直接删除文件
     QFile* file = new QFile(filePath);
@@ -521,7 +521,7 @@ void FDObject::deleteFile(QString filePath)
 
     // 删除失败解锁文件
     file->close();
-    bDelete = this->unlockHandle(filePath);
+    bDelete = this->sltUnlockHandle(filePath);
 
     delete file;
     // 解锁成功，删除文件
@@ -539,10 +539,10 @@ void FDObject::deleteFile(QString filePath)
  * @brief FDObject::crushFile 粉碎文件
  * @param filePath 需要粉碎文件的路径
  */
-void FDObject::crushFile(QString filePath)
+void FDObject::sltCrushFile(QString filePath)
 {
     // 首先解锁文件
-    bool bUnlock = this->unlockHandle(filePath);
+    bool bUnlock = this->sltUnlockHandle(filePath);
 
     // 解锁失败
     if (!bUnlock)

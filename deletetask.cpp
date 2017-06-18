@@ -16,5 +16,5 @@ DeleteTask::~DeleteTask()
 void DeleteTask::execTask()
 {
     FDObject fdObject;
-    fdObject.deleteFile(mFilePath);
+    fdObject.sltDeleteFile(mFilePath);
 }

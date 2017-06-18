@@ -14,5 +14,5 @@ UnlockTask::~UnlockTask()
 void UnlockTask::execTask()
 {
     FDObject fdObject;
-    fdObject.unlockHandle(this->mFilePath);
+    fdObject.sltUnlockHandle(this->mFilePath);
 }

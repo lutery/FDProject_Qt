@@ -9,6 +9,9 @@ public:
     explicit AnalysisTask(QString filePath, QObject* parent = nullptr);
     virtual ~AnalysisTask();
 
+signals:
+    void sigComplete(bool, QStringList);
+
 public slots:
     void execTask() override;
 

@@ -9,6 +9,9 @@ public:
     explicit DeleteTask(QString filePath, QObject* parent = nullptr);
     virtual ~DeleteTask();
 
+signals:
+    void sigDelFile(bool);
+
 public slots:
     void execTask() override;
 
