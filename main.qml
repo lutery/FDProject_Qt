@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Styles 1.4
-import one.chchy.FDService 1.0
+import one.chchy.FDService 1.1
 
 ApplicationWindow {
     id: idMainWindow
@@ -43,41 +43,41 @@ ApplicationWindow {
 
     FDService{
         id: fdObject
-        onComplete: {
-            for (var index in filePaths){
-                console.log(filePaths[index]);
-                progressModel.append({
-                                      "progressInfo" : filePaths[index]
-                                     })
-            }
+//        sigComplete: {
+//            for (var index in filePaths){
+//                console.log(filePaths[index]);
+//                progressModel.append({
+//                                      "progressInfo" : filePaths[index]
+//                                     })
+//            }
 
-            idprogressBar.visible = false;
-        }
+//            idprogressBar.visible = false;
+//        }
 
-        onUnlock: {
-            idprogressBar.visible = false;
-        }
+//        sigUnlock: {
+//            idprogressBar.visible = false;
+//        }
 
-        onDelcomplete: {
-             idprogressBar.visible = false;
-        }
+//        sigDelcomplete: {
+//             idprogressBar.visible = false;
+//        }
 
-        onCrush: {
-            idprogressBar.visible = false;
-        }
+//        sigCrush: {
+//            idprogressBar.visible = false;
+//        }
     }
 
     ListModel{
         id: fileModel
-        ListElement{
-            fileUrl: "C:\\text.txt"
-        }
-        ListElement{
-            fileUrl: "E:\\UBuntu1404.rar"
-        }
-        ListElement{
-            fileUrl: "H:\\CloudMusic\\MONACA - クロイウタ／日本国外向け製品収録版.mp3"
-        }
+//        ListElement{
+//            fileUrl: "C:\\text.txt"
+//        }
+//        ListElement{
+//            fileUrl: "E:\\UBuntu1404.rar"
+//        }
+//        ListElement{
+//            fileUrl: "H:\\CloudMusic\\MONACA - クロイウタ／日本国外向け製品収録版.mp3"
+//        }
     }
 
     ListModel{
@@ -225,7 +225,7 @@ ApplicationWindow {
                     if (listFiles.currentIndex >= 0){
                         var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
                         console.log(fileUrl)
-                        fdObject.analysis(fileUrl)
+                        fdObject.sltAnalysis(fileUrl)
                         idprogressBar.visible = true;
                     }
                 }
@@ -237,7 +237,7 @@ ApplicationWindow {
                     if (listFiles.currentIndex >= 0){
                         var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
                         console.log(fileUrl)
-                        fdObject.unlockHandle(fileUrl)
+                        fdObject.sltUnlockHandle(fileUrl)
                         idprogressBar.visible = true;
                     }
                 }
@@ -249,7 +249,7 @@ ApplicationWindow {
                     if (listFiles.currentIndex >= 0){
                         var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
                         console.log(fileUrl)
-                        fdObject.deleteFile(fileUrl)
+                        fdObject.sltDeleteFile(fileUrl)
                         idprogressBar.visible = true;
                     }
                 }
@@ -261,7 +261,7 @@ ApplicationWindow {
                     if (listFiles.currentIndex >= 0){
                         var fileUrl = fileModel.get(listFiles.currentIndex).fileUrl
                         console.log(fileUrl)
-                        fdObject.curshFile(fileUrl)
+                        fdObject.sltCurshFile(fileUrl)
                         idprogressBar.visible = true;
                     }
                 }

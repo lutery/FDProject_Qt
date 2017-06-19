@@ -14,5 +14,6 @@ UnlockTask::~UnlockTask()
 void UnlockTask::execTask()
 {
     FDObject fdObject;
+    QObject::connect(&fdObject, SIGNAL(sigUnlock(bool)), this, SIGNAL(sigUnlook(bool)));
     fdObject.sltUnlockHandle(this->mFilePath);
 }

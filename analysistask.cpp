@@ -14,5 +14,6 @@ AnalysisTask::~AnalysisTask()
 void AnalysisTask::execTask()
 {
     FDObject fdObject;
+    QObject::connect(&fdObject, SIGNAL(sigAnaComplet(bool,QStringList)), this, SIGNAL(sigComplete(bool,QStringList)));
     fdObject.sltAnalysis(mFilePath);
 }

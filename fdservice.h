@@ -22,17 +22,17 @@ public:
 
 signals:
     // 查询完成信号
-    void complete(QStringList filePaths);
-    void unlock(bool bunlock);
-    void delcomplete(bool bdelete);
-    void crush(bool bcrush);
+    void sigComplete(QStringList filePaths);
+    void sigUnlock(bool bunlock);
+    void sigDelcomplete(bool bdelete);
+    void sigCrush(bool bcrush);
 
 public slots:
-    void analysis(QString filePath);
-    void unlockHandle(QString filePath);
-    void deleteFile(QString filePath);
-    void curshFile(QString filePath);
-    void analysisComplete(bool isReady, QStringList filePaths);
+    void sltAnalysis(QString filePath);
+    void sltUnlockHandle(QString filePath);
+    void sltDeleteFile(QString filePath);
+    void sltCurshFile(QString filePath);
+    void sltAnaComplete(bool isReady, QStringList filePaths);
 
 private:
     // 删除解锁Object执行体

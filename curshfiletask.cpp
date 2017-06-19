@@ -16,5 +16,6 @@ CurshFileTask::~CurshFileTask()
 void CurshFileTask::execTask()
 {
     FDObject fdObject;
+    QObject::connect(&fdObject, SIGNAL(sigCurshFile(bool)), this, SIGNAL(sigCurshFile(bool)));
     fdObject.sltCrushFile(this->mFilePath);
 }

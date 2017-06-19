@@ -1,8 +1,8 @@
 #include "fdservice.h"
-#include "analysisthread.h"
-#include "unlockthread.h"
-#include "deletethread.h"
-#include "curshfilethread.h"
+//#include "analysisthread.h"
+//#include "unlockthread.h"
+//#include "deletethread.h"
+//#include "curshfilethread.h"
 #include "taskcenter.h"
 #include "analysistask.h"
 #include "unlocktask.h"
@@ -38,7 +38,7 @@ FDService::~FDService()
     stopThread(this->mpTaskCenter);
 }
 
-void FDService::analysis(QString filePath)
+void FDService::sltAnalysis(QString filePath)
 {
    qDebug() << "FDService analysis";
 //   stopThread(this->mpAnalysis);
@@ -48,10 +48,11 @@ void FDService::analysis(QString filePath)
 //   this->mpAnalysis->start();
 
    std::shared_ptr<AnalysisTask> pAnalysis = std::shared_ptr<AnalysisTask>(new AnalysisTask(filePath));
+   connect(pAnalysis.get(), SIGNAL(sigComplete(bool,QStringList)), this, SLOT(sltAnaComplete(bool,QStringList)));
    this->mpTaskCenter->pushTask(pAnalysis);
 }
 
-void FDService::unlockHandle(QString filePath)
+void FDService::sltUnlockHandle(QString filePath)
 {
 //    stopThread(this->mpUnlock);
 
@@ -59,10 +60,11 @@ void FDService::unlockHandle(QString filePath)
 //    connect((this->mpUnlock), SIGNAL(onUnlock(bool)), this, SIGNAL(unlock(bool)));
 //    this->mpUnlock->start();
     std::shared_ptr<UnlockTask> pUnlockTask = std::shared_ptr<UnlockTask>(new UnlockTask(filePath));
+    connect(pUnlockTask.get(), SIGNAL(sigUnlook(bool)), this, SIGNAL(sigUnlock(bool)));
     this->mpTaskCenter->pushTask(pUnlockTask);
 }
 
-void FDService::deleteFile(QString filePath)
+void FDService::sltDeleteFile(QString filePath)
 {
     qDebug() << "FDService delete file start";
 //    stopThread(this->mpTDelete);
@@ -71,10 +73,11 @@ void FDService::deleteFile(QString filePath)
 //    connect((this->mpTDelete), SIGNAL(onDelFile(bool)), this, SIGNAL(delcomplete(bool)));
 //    this->mpTDelete->start();
     std::shared_ptr<DeleteTask> pDeleteTask = std::shared_ptr<DeleteTask>(new DeleteTask(filePath));
+    connect(pDeleteTask.get(), SIGNAL(sigDelFile(bool)), this, SIGNAL(sigDelcomplete(bool)));
     this->mpTaskCenter->pushTask(pDeleteTask);
 }
 
-void FDService::curshFile(QString filePath)
+void FDService::sltCurshFile(QString filePath)
 {
     qDebug() << "FDService curshFile start";
 //    stopThread(this->mpTCursh);
@@ -83,10 +86,11 @@ void FDService::curshFile(QString filePath)
 //    connect(this->mpTCursh, SIGNAL(onCurshFile(bool)), this, SIGNAL(crush(bool)));
 //    this->mpTCursh->start();
     std::shared_ptr<CurshFileTask> pCurshFileTask = std::shared_ptr<CurshFileTask>(new CurshFileTask(filePath));
+    connect(pCurshFileTask.get(), SIGNAL(sigCurshFile(bool)), this, SIGNAL(crush(bool)));
     this->mpTaskCenter->pushTask(pCurshFileTask);
 }
 
-void FDService::analysisComplete(bool isReady, QStringList filePaths)
+void FDService::sltAnaComplete(bool isReady, QStringList filePaths)
 {
     qDebug() << "isReady:" << (isReady ? "true" : "false");
 
@@ -95,5 +99,5 @@ void FDService::analysisComplete(bool isReady, QStringList filePaths)
         qDebug() << "filePath is " << filePath;
     }
 
-    emit complete(filePaths);
+    emit sigComplete(filePaths);
 }

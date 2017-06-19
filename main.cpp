@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 //    TestThread testThread;
 //    testThread.start();
 
-    qmlRegisterType<FDService>("one.chchy.FDService", 1, 0, "FDService");
+    qmlRegisterType<FDService>("one.chchy.FDService", 1, 1, "FDService");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));

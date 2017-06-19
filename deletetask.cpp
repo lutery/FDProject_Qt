@@ -16,5 +16,6 @@ DeleteTask::~DeleteTask()
 void DeleteTask::execTask()
 {
     FDObject fdObject;
+    QObject::connect(&fdObject, SIGNAL(sigDelFile(bool)), this, SIGNAL(sigDelFile(bool)));
     fdObject.sltDeleteFile(mFilePath);
 }
