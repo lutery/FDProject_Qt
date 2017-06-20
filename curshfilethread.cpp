@@ -1,4 +1,4 @@
-#include "curshfilethread.h"
+﻿#include "curshfilethread.h"
 #include "fdobject.h"
 #include <QDebug>
 

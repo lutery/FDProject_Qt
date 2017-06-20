@@ -1,4 +1,4 @@
-#ifndef FDSERVICE_H
+﻿#ifndef FDSERVICE_H
 #define FDSERVICE_H
 
 #include <QObject>
@@ -22,10 +22,10 @@ public:
 
 signals:
     // 查询完成信号
-    void sigComplete(QStringList filePaths);
-    void sigUnlock(bool bunlock);
-    void sigDelcomplete(bool bdelete);
-    void sigCrush(bool bcrush);
+    void complete(QStringList filePaths);
+    void unlock(bool bunlock);
+    void delcomplete(bool bdelete);
+    void crush(bool bcrush);
 
 public slots:
     void sltAnalysis(QString filePath);

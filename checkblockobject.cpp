@@ -1,4 +1,4 @@
-#include "checkblockobject.h"
+﻿#include "checkblockobject.h"
 #include <QDebug>
 
 //CheckBlockObject::CheckBlockObject(HANDLE handle, QObject* parent) : QObject(parent)

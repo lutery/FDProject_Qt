@@ -1,4 +1,4 @@
-#include "fdtask.h"
+﻿#include "fdtask.h"
 
 FDTask::FDTask(QObject *parent) : QObject(parent)
 {

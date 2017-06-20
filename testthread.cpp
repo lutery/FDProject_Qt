@@ -1,4 +1,4 @@
-#include "testthread.h"
+﻿#include "testthread.h"
 #include "checkblockobject.h"
 #include "fdobject.h"
 #include <QDebug>
@@ -72,7 +72,7 @@ void TestThread::run()
 //    MyNtStatus=NtQueryInformationFile(pFileInfo->hFileHandle,&IoStatus,pFileNameInformation,
 //                                      sizeof(FILE_INFO)-sizeof(HANDLE)-sizeof(BOOL),FileNameInformationClass);
 
-//    if(NT_SUCCESS(MyNtStatus))
+//    if(CH_NT_SUCCESS(MyNtStatus))
 //    {
 //        if(pFileNameInformation->FileNameLength!=0)
 //        {
@@ -144,7 +144,7 @@ void TestThread::run()
 
 //    MyNtStatus=NtQuerySystemInformation(SystemHandleInformation,pSystemsHandleInformation,dwNeedSize,NULL);
 
-//    if (!NT_SUCCESS(MyNtStatus))
+//    if (!CH_NT_SUCCESS(MyNtStatus))
 //    {
 //        goto MyErrorExit;
 //    }
@@ -249,7 +249,7 @@ void TestThread::run()
 
 //    MyNtStatus=NtQuerySystemInformation(SystemHandleInformation,pSystemsHandleInformation,dwNeedSize,NULL);
 
-//    if (!NT_SUCCESS(MyNtStatus))
+//    if (!CH_NT_SUCCESS(MyNtStatus))
 //    {
 //        pLockorInfo->bFlag=FALSE;
 //        if (pSystemsHandleInformation!=NULL)
@@ -391,7 +391,7 @@ void TestThread::run()
 //    MyNtStatus=NtQueryInformationFile(pFileInfo->hFileHandle,&IoStatus,pFileNameInformation,
 //                                      sizeof(FILE_INFO)-sizeof(HANDLE)-sizeof(BOOL),FileNameInformationClass);
 
-//    if(NT_SUCCESS(MyNtStatus))
+//    if(CH_NT_SUCCESS(MyNtStatus))
 //    {
 //        if(pFileNameInformation->FileNameLength!=0)
 //        {

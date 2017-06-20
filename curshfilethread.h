@@ -1,4 +1,4 @@
-#ifndef CURSHFILETHREAD_H
+﻿#ifndef CURSHFILETHREAD_H
 #define CURSHFILETHREAD_H
 
 #include <QThread>

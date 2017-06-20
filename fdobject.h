@@ -1,4 +1,4 @@
-#ifndef FDOBJECT_H
+﻿#ifndef FDOBJECT_H
 #define FDOBJECT_H
 
 #include <QObject>

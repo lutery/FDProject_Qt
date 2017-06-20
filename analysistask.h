@@ -1,10 +1,11 @@
-#ifndef ANALYSISTASK_H
+﻿#ifndef ANALYSISTASK_H
 #define ANALYSISTASK_H
 
 #include "fdtask.h"
 
 class AnalysisTask : public FDTask
 {
+    Q_OBJECT
 public:
     explicit AnalysisTask(QString filePath, QObject* parent = nullptr);
     virtual ~AnalysisTask();

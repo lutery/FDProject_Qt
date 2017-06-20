@@ -1,4 +1,4 @@
-#include "fdobject.h"
+﻿#include "fdobject.h"
 #include "checkblockobject.h"
 #include <string>
 #include <QDebug>
@@ -73,7 +73,7 @@ public:
             pshi = (PSYSTEM_HANDLE_INFORMATION)realloc(pshi, dwLength);
         }
 
-        if (!NT_SUCCESS(status))
+        if (!CH_NT_SUCCESS(status))
         {
             free(pshi);
             pshi = NULL;
@@ -258,7 +258,7 @@ public:
         }
 
         BOOL bRes = FALSE;
-        if (NT_SUCCESS(status))
+        if (CH_NT_SUCCESS(status))
         {
             // 获取路径信息，并转换为逻辑驱动器形式
             path = pInfo->Name.Buffer;

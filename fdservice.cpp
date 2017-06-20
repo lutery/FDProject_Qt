@@ -1,4 +1,4 @@
-#include "fdservice.h"
+﻿#include "fdservice.h"
 //#include "analysisthread.h"
 //#include "unlockthread.h"
 //#include "deletethread.h"
@@ -47,9 +47,9 @@ void FDService::sltAnalysis(QString filePath)
 //   connect((this->mpAnalysis), SIGNAL(onComplete(bool,QStringList)), this, SLOT(analysisComplete(bool,QStringList)));
 //   this->mpAnalysis->start();
 
-   std::shared_ptr<AnalysisTask> pAnalysis = std::shared_ptr<AnalysisTask>(new AnalysisTask(filePath));
-   connect(pAnalysis.get(), SIGNAL(sigComplete(bool,QStringList)), this, SLOT(sltAnaComplete(bool,QStringList)));
-   this->mpTaskCenter->pushTask(pAnalysis);
+   AnalysisTask* pAnalysis = new AnalysisTask(filePath);
+   connect(pAnalysis, SIGNAL(sigComplete(bool,QStringList)), this, SLOT(sltAnaComplete(bool,QStringList)));
+   this->mpTaskCenter->pushTask(std::shared_ptr<AnalysisTask>(pAnalysis));
 }
 
 void FDService::sltUnlockHandle(QString filePath)
@@ -99,5 +99,5 @@ void FDService::sltAnaComplete(bool isReady, QStringList filePaths)
         qDebug() << "filePath is " << filePath;
     }
 
-    emit sigComplete(filePaths);
+    emit complete(filePaths);
 }

@@ -1,4 +1,4 @@
-#include "unlocktask.h"
+﻿#include "unlocktask.h"
 #include "fdobject.h"
 
 UnlockTask::UnlockTask(QString filePath, QObject *parent):FDTask(parent)

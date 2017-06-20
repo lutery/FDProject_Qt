@@ -1,8 +1,8 @@
-import QtQuick 2.7
+﻿import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Styles 1.4
-import one.chchy.FDService 1.1
+import one.chchy.FDService 1.2
 
 ApplicationWindow {
     id: idMainWindow
@@ -43,28 +43,28 @@ ApplicationWindow {
 
     FDService{
         id: fdObject
-//        sigComplete: {
-//            for (var index in filePaths){
-//                console.log(filePaths[index]);
-//                progressModel.append({
-//                                      "progressInfo" : filePaths[index]
-//                                     })
-//            }
+        onComplete: {
+            for (var index in filePaths){
+                console.log(filePaths[index]);
+                progressModel.append({
+                                      "progressInfo" : filePaths[index]
+                                     })
+            }
 
-//            idprogressBar.visible = false;
-//        }
+            idprogressBar.visible = false;
+        }
 
-//        sigUnlock: {
-//            idprogressBar.visible = false;
-//        }
+        onUnlock: {
+            idprogressBar.visible = false;
+        }
 
-//        sigDelcomplete: {
-//             idprogressBar.visible = false;
-//        }
+        onDelcomplete: {
+             idprogressBar.visible = false;
+        }
 
-//        sigCrush: {
-//            idprogressBar.visible = false;
-//        }
+        onCrush: {
+            idprogressBar.visible = false;
+        }
     }
 
     ListModel{

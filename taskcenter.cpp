@@ -1,4 +1,4 @@
-#include "taskcenter.h"
+﻿#include "taskcenter.h"
 #include "fdtask.h"
 
 TaskCenter::TaskCenter(QObject *parent) : QThread(parent)

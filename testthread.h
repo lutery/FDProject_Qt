@@ -1,4 +1,4 @@
-#ifndef TESTTHREAD_H
+﻿#ifndef TESTTHREAD_H
 #define TESTTHREAD_H
 
 #include <QThread>

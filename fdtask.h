@@ -1,4 +1,4 @@
-#ifndef FDTASK_H
+﻿#ifndef FDTASK_H
 #define FDTASK_H
 
 #include <QObject>

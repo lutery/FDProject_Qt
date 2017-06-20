@@ -1,10 +1,11 @@
-#ifndef CURSHFILETASK_H
+﻿#ifndef CURSHFILETASK_H
 #define CURSHFILETASK_H
 
 #include "fdtask.h"
 
 class CurshFileTask : public FDTask
 {
+    Q_OBJECT
 public:
     explicit CurshFileTask(QString filePath, QObject* parent = nullptr);
     virtual ~CurshFileTask();

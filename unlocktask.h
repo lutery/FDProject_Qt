@@ -1,10 +1,11 @@
-#ifndef UNLOCKTASK_H
+﻿#ifndef UNLOCKTASK_H
 #define UNLOCKTASK_H
 
 #include "fdtask.h"
 
 class UnlockTask : public FDTask
 {
+    Q_OBJECT
 public:
     explicit UnlockTask(QString filePath, QObject* parent = nullptr);
     virtual ~UnlockTask();

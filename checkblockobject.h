@@ -1,4 +1,4 @@
-#ifndef CHECKBLOCKOBJECT_H
+﻿#ifndef CHECKBLOCKOBJECT_H
 #define CHECKBLOCKOBJECT_H
 
 //#include <QObject>

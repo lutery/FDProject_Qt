@@ -1,4 +1,4 @@
-#include "deletetask.h"
+﻿#include "deletetask.h"
 #include "fdtask.h"
 #include "fdobject.h"
 #include <QDebug>

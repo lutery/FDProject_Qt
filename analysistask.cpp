@@ -1,4 +1,4 @@
-#include "analysistask.h"
+﻿#include "analysistask.h"
 #include "fdobject.h"
 
 AnalysisTask::AnalysisTask(QString filePath, QObject *parent):FDTask(parent)

@@ -1,4 +1,4 @@
-#ifndef TASKCENTER_H
+﻿#ifndef TASKCENTER_H
 #define TASKCENTER_H
 
 #include <QThread>

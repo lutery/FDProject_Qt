@@ -1,4 +1,4 @@
-#ifndef PREDEFINE_H
+﻿#ifndef PREDEFINE_H
 #define PREDEFINE_H
 #include <tchar.h>
 #include <Windows.h>
@@ -10,7 +10,7 @@ typedef std::basic_string<TCHAR, std::char_traits<TCHAR>, std::allocator<TCHAR>>
 
 #include <psapi.h>
 
-#define NT_SUCCESS(status)					(status == (NTSTATUS)0x00000000L)
+#define CH_NT_SUCCESS(status)					(status == (NTSTATUS)0x00000000L)
 #define STATUS_INFO_LENGTH_MISMATCH			((NTSTATUS)0xC0000004L)
 #define STATUS_BUFFER_OVERFLOW				((NTSTATUS)0x80000005L)
 #define SystemHandleInformation				((SYSTEM_INFORMATION_CLASS)16)

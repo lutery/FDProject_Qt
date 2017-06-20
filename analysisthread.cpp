@@ -1,4 +1,4 @@
-#include "analysisthread.h"
+﻿#include "analysisthread.h"
 #include "fdobject.h"
 #include <QDebug>
 

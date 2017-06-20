@@ -1,4 +1,4 @@
-#ifndef UNLOCKTHREAD_H
+﻿#ifndef UNLOCKTHREAD_H
 #define UNLOCKTHREAD_H
 
 #include <QThread>

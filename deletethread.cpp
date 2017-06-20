@@ -1,4 +1,4 @@
-#include "deletethread.h"
+﻿#include "deletethread.h"
 #include "fdobject.h"
 #include <QDebug>
 

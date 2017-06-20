@@ -1,4 +1,4 @@
-#ifndef DELETETHREAD_H
+﻿#ifndef DELETETHREAD_H
 #define DELETETHREAD_H
 
 #include <QThread>

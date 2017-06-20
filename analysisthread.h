@@ -1,4 +1,4 @@
-#ifndef ANALYSISTHREAD_H
+﻿#ifndef ANALYSISTHREAD_H
 #define ANALYSISTHREAD_H
 
 #include <QThread>

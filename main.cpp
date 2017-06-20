@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+﻿#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QStringList>
 #include <QQmlContext>
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 //    TestThread testThread;
 //    testThread.start();
 
-    qmlRegisterType<FDService>("one.chchy.FDService", 1, 1, "FDService");
+    qmlRegisterType<FDService>("one.chchy.FDService", 1, 2, "FDService");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
