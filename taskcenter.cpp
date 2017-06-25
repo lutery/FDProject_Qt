@@ -26,7 +26,7 @@ void TaskCenter::run()
 {
     while (mbRun)
     {
-        if (this->mTaskLock.try_lock() && this->mTasks.size() > 0)
+        if (this->mTasks.size() > 0 && this->mTaskLock.try_lock())
         {
             std::shared_ptr<FDTask> task = this->mTasks.front();
             this->mTasks.pop();
@@ -36,6 +36,6 @@ void TaskCenter::run()
 
         }
 
-        QThread::msleep(200);
+        QThread::msleep(2);
     }
 }

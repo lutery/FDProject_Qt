@@ -7,45 +7,29 @@ SOURCES += main.cpp \
     checkblockobject.cpp \
     testthread.cpp \
     fdservice.cpp \
-    analysisthread.cpp \
-    unlockthread.cpp \
-    deletethread.cpp \
-    curshfilethread.cpp \
     fdtask.cpp \
     taskcenter.cpp \
-    analysisthread.cpp \
     checkblockobject.cpp \
-    curshfilethread.cpp \
-    deletethread.cpp \
     fdobject.cpp \
     fdservice.cpp \
     fdtask.cpp \
     main.cpp \
     taskcenter.cpp \
     testthread.cpp \
-    unlockthread.cpp \
-    analysisthread.cpp \
     checkblockobject.cpp \
-    curshfilethread.cpp \
-    deletethread.cpp \
     fdobject.cpp \
     fdservice.cpp \
     fdtask.cpp \
     main.cpp \
     taskcenter.cpp \
     testthread.cpp \
-    unlockthread.cpp \
-    analysisthread.cpp \
     checkblockobject.cpp \
-    curshfilethread.cpp \
-    deletethread.cpp \
     fdobject.cpp \
     fdservice.cpp \
     fdtask.cpp \
     main.cpp \
     taskcenter.cpp \
     testthread.cpp \
-    unlockthread.cpp \
     analysistask.cpp \
     curshfiletask.cpp \
     deletetask.cpp \
@@ -82,45 +66,29 @@ HEADERS += \
     checkblockobject.h \
     testthread.h \
     fdservice.h \
-    analysisthread.h \
-    unlockthread.h \
-    deletethread.h \
-    curshfilethread.h \
     fdtask.h \
     taskcenter.h \
-    analysisthread.h \
     checkblockobject.h \
-    curshfilethread.h \
-    deletethread.h \
     fdobject.h \
     fdservice.h \
     fdtask.h \
     predefine.h \
     taskcenter.h \
     testthread.h \
-    unlockthread.h \
-    analysisthread.h \
     checkblockobject.h \
-    curshfilethread.h \
-    deletethread.h \
     fdobject.h \
     fdservice.h \
     fdtask.h \
     predefine.h \
     taskcenter.h \
     testthread.h \
-    unlockthread.h \
-    analysisthread.h \
     checkblockobject.h \
-    curshfilethread.h \
-    deletethread.h \
     fdobject.h \
     fdservice.h \
     fdtask.h \
     predefine.h \
     taskcenter.h \
     testthread.h \
-    unlockthread.h \
     analysistask.h \
     curshfiletask.h \
     deletetask.h \

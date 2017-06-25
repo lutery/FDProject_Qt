@@ -60,7 +60,7 @@ void FDService::sltUnlockHandle(QString filePath)
 //    connect((this->mpUnlock), SIGNAL(onUnlock(bool)), this, SIGNAL(unlock(bool)));
 //    this->mpUnlock->start();
     std::shared_ptr<UnlockTask> pUnlockTask = std::shared_ptr<UnlockTask>(new UnlockTask(filePath));
-    connect(pUnlockTask.get(), SIGNAL(sigUnlook(bool)), this, SIGNAL(sigUnlock(bool)));
+    connect(pUnlockTask.get(), SIGNAL(sigUnlook(bool)), this, SIGNAL(unlock(bool)));
     this->mpTaskCenter->pushTask(pUnlockTask);
 }
 
@@ -73,7 +73,7 @@ void FDService::sltDeleteFile(QString filePath)
 //    connect((this->mpTDelete), SIGNAL(onDelFile(bool)), this, SIGNAL(delcomplete(bool)));
 //    this->mpTDelete->start();
     std::shared_ptr<DeleteTask> pDeleteTask = std::shared_ptr<DeleteTask>(new DeleteTask(filePath));
-    connect(pDeleteTask.get(), SIGNAL(sigDelFile(bool)), this, SIGNAL(sigDelcomplete(bool)));
+    connect(pDeleteTask.get(), SIGNAL(sigDelFile(bool)), this, SIGNAL(delcomplete(bool)));
     this->mpTaskCenter->pushTask(pDeleteTask);
 }
 

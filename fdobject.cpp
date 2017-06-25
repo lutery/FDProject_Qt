@@ -477,10 +477,11 @@ bool FDObject::sltUnlockHandle(QString filePathName)
             dReturn = DuplicateHandle(hProc, (HANDLE)pshi->Handles[i].wValue, hCrtProc, &handle, 0, FALSE, DUPLICATE_CLOSE_SOURCE);
 
             // 关闭获取的句柄
-            if (handle != INVALID_HANDLE_VALUE)
-            {
-                CloseHandle(handle);
-            }
+            // 没必要主动关闭句柄，因为这里实现了一个可以自动析构的句柄
+//            if (handle != INVALID_HANDLE_VALUE)
+//            {
+//                CloseHandle(handle);
+//            }
 
             // 使用远程注入的方式关闭句柄
             // 已验证，这居可以不需要，本来理论上，复制了原始句柄之后
@@ -489,10 +490,12 @@ bool FDObject::sltUnlockHandle(QString filePathName)
         }
 
 
-        if (hProc != NULL)
-        {
-            CloseHandle(hProc);
-        }
+        // 关闭获取的句柄
+        // 没必要主动关闭句柄，因为这里实现了一个可以自动析构的句柄
+//        if (hProc != NULL)
+//        {
+//            CloseHandle(hProc);
+//        }
     }
 
     free(pshi);
@@ -530,9 +533,9 @@ void FDObject::sltDeleteFile(QString filePath)
         file = new QFile(filePath);
         bDelete = file->remove();
         file->close();
+        delete file;
     }
 
-    delete file;
     emit sigDelFile(bDelete);
 }
 /**
