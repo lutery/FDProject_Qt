@@ -3,6 +3,9 @@
 
 #include "fdtask.h"
 
+/**
+ * @brief The AnalysisTask class 解析任务
+ */
 class AnalysisTask : public FDTask
 {
     Q_OBJECT
@@ -11,6 +14,7 @@ public:
     virtual ~AnalysisTask();
 
 signals:
+    // 任务执行完毕信号
     void sigComplete(bool, QStringList);
 
 public slots:
